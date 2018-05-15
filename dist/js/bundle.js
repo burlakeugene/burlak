@@ -67,8 +67,7 @@
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(1);
-module.exports = __webpack_require__(3);
+module.exports = __webpack_require__(1);
 
 
 /***/ }),
@@ -85,9 +84,6 @@ var Burlak = _interopRequireWildcard(_burlak);
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 var request = new Burlak.Request();
-var dom = new Burlak.DOM();
-var url = new Burlak.Url();
-var cookie = new Burlak.Cookie();
 
 /***/ }),
 /* 2 */
@@ -207,12 +203,6 @@ var Url = exports.Url = function Url() {
 		return null;
 	};
 };
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);
