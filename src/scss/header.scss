@@ -1,0 +1,150 @@
+.header{
+	font-size: 0;
+	background-color: $color-black;
+	&-top{
+		position: relative;
+		padding-bottom: 5px;
+		&:before,
+		&:after{
+			content: '';
+			display: block;
+			position: absolute;
+			bottom:0;
+			left:0;
+			width: 100%;
+			height: 1px;
+			background-color: $color-dark-gray;
+		}
+		&:after{
+			bottom: -1px;
+			display: none;
+			background-color: $color-light-gray;
+		}
+	}
+	&__over-banner{
+		-webkit-backdrop-filter: blur(10px);
+		        backdrop-filter: blur(10px);
+        background-color: rgba(151,128,108, 0.6);
+        position: absolute;
+        top:0;
+        left:0;
+        width: 100%;
+        z-index: 2;
+       	.header-top{
+			&:before{
+				background-color: $color-brown;
+			}
+			&:after{
+				display: block;
+			}
+       	}
+       	-webkit-box-shadow: inset 0px -15px 15px -10px $color-brown;
+       	        box-shadow: inset 0px -15px 15px -10px $color-brown;
+	}
+	&-left{
+		display: inline-block;
+		vertical-align: middle;
+		width: 100%;
+		max-width: 183px;
+		a{
+			display: block;
+			padding: 10px 0;
+		}
+		img{
+			max-width: 100%;
+			height: auto;
+		}
+	}
+	&-middle{
+		padding-left: 35px;
+		@include calc(width, '100% - 318px');
+		display: inline-block;
+		vertical-align: middle;
+	}
+	&-right{
+		display: inline-block;
+		vertical-align: middle;
+		width: 135px;
+	}
+	&-connect{
+		display: inline-block;
+		vertical-align: middle;
+		padding: 0 20px;
+		width: 40%;
+	}
+	&-phone{
+		display: inline-block;
+		vertical-align: middle;
+		padding: 0 20px;
+		width: 60%;
+		a{
+			font-size: 30px;
+			text-decoration: none;
+			color: $color-white;
+			font-family: prox-light;
+			@include text-shadow();
+			position: relative;
+			padding-left: 40px;
+			display: inline-block;
+			&:before{
+				content: '';
+				display: block;
+				position: absolute;
+				top: 50%;
+				left: 0;
+				margin-top: -16.5px;
+				width: 33px;
+				height: 33px;
+				background-position: center cneter;
+				background-repeat: no-repeat;
+				-webkit-background-size: 33px 33px;
+				        background-size: 33px 33px;
+				background-image: url(../images/icon-phone.png);
+				@include animated(0.3s);
+			}
+			&:hover{
+				&:before{
+					-webkit-animation: ring linear .15s infinite;
+    				animation: ring linear .15s infinite;
+				}
+			}
+		}
+	}
+	&-login{
+		padding-left: 20px;;
+		display: inline-block;
+		vertical-align: middle;		
+		a{
+			display: block;
+			font-size: 18px;
+			font-family: prox-light;
+			color: $color-white;
+			text-decoration: none;
+			@include animated(0.3s);
+			padding-left: 48px;
+			position: relative;
+			line-height: 1em;
+			&:before{
+				content: '';
+				display: block;
+				position: absolute;
+				top: 50%;
+				left: 0;
+				margin-top: -19px;
+				width: 38px;
+				height: 38px;
+				background-position: center cneter;
+				background-repeat: no-repeat;
+				-webkit-background-size: 38px 38px;
+				        background-size: 38px 38px;
+				background-image: url(../images/icon-login.png);
+				@include animated(0.3s);
+			}
+			&:hover{
+				&:before{
+					@include transform(scale(1.1));
+				}
+			}
+		}
+	}
+}

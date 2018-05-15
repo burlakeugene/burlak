@@ -1,0 +1,82 @@
+.footer{
+	background-color: $color-black;
+	padding: 60px 0;
+	font-size: 0;
+	&-block{
+		display: inline-block;
+		vertical-align: top;
+	}
+	&-left{
+		width: 40%;
+		padding-left: 15px;
+	}
+	&-phone{
+		a{
+			font-size: 30px;
+			text-decoration: none;
+			color: $color-white;
+			font-family: prox-light;
+			@include text-shadow();
+			position: relative;
+			padding-left: 40px;
+			display: inline-block;
+			&:before{
+				content: '';
+				display: block;
+				position: absolute;
+				top: 50%;
+				left: 0;
+				margin-top: -16.5px;
+				width: 33px;
+				height: 33px;
+				background-position: center cneter;
+				background-repeat: no-repeat;
+				-webkit-background-size: 33px 33px;
+				        background-size: 33px 33px;
+				background-image: url(../images/icon-phone.png);
+				@include animated(0.3s);
+			}
+			&:hover{
+				&:before{
+					-webkit-animation: ring linear .15s infinite;
+    				animation: ring linear .15s infinite;
+				}
+			}
+		}
+	}
+	&-title{
+		text-transform: uppercase;
+		font-size: 14px;
+		font-family: prox-bold;
+		color: $color-light-gray2;
+		margin-top: 0;
+		margin-bottom: 8px;
+	}
+	&-rights{
+		color: $color-gray;
+		font-size: 12px;
+		font-family: prox-light;
+		margin-top: 15px;
+	}
+	&-navigation{
+		padding: 0 15px;
+		width: 20%;
+	}
+	&-socials{
+		padding: 0 15px;
+		width: 20%;
+	}
+	&-madeby{
+		width: 20%;
+		text-align: right;
+		span{
+			font-size: 12px;
+			color: $color-white;
+			font-family: prox-light;
+			position: relative;	
+			left: -43px;
+			margin-bottom: 10px;
+			display: inline-block;	
+		}
+	}
+}
