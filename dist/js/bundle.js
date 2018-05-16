@@ -83,8 +83,6 @@ var Burlak = _interopRequireWildcard(_burlak);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-var request = new Burlak.Request();
-
 /***/ }),
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -201,6 +199,48 @@ var Url = exports.Url = function Url() {
 			return decodeURIComponent(name[1]);
 		}
 		return null;
+	};
+};
+
+var Random = exports.Random = function Random() {
+	this.defaultSystem = 10;
+	this.defaultLength = 13;
+	this.defaultUIdCount = 4;
+	this.maxLength = this.defaultLength;
+
+	this.single = function () {
+		var system = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.defaultSystem;
+		var length = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.defaultLength;
+
+		if (length > this.maxLength) {
+			length = this.maxLength;
+			console.warn('Max length of random number is ' + this.maxLength);
+		}
+		var rand = window.Math.floor(window.Math.random() * 0x10000000000000),
+		    result = void 0;
+		rand = rand.toString(system).substring(1), result = rand.split('').splice(0, length).join('');
+		return result;
+	};
+
+	this.multy = function () {
+		var count = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.defaultUIdCount;
+		var system = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.defaultSystem;
+		var length = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : this.defaultLength;
+
+		var result = '';
+		for (var i = 0; i < count; i++) {
+			result += this.single(system, length) + '-';
+			if (i == count - 1) result = result.substring(0, result.length - 1);
+		}
+		return result;
+	};
+};
+
+var Date = exports.Date = function Date() {
+	var Date = window.Date;
+	this.formateDate = function (val) {
+		var d = new Date(val);
+		return (d.getDate() < 10 ? '0' + d.getDate() : d.getDate()) + '-' + (d.getMonth() + 1 < 10 ? '0' + (d.getMonth() + 1) : d.getMonth() + 1) + '-' + (d.getYear() + 1900) + ' ' + (d.getHours() < 10 ? '0' + d.getHours() : d.getHours()) + ':' + (d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes());
 	};
 };
 
