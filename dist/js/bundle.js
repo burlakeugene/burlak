@@ -191,6 +191,31 @@ var Cookie = exports.Cookie = function Cookie() {
 	this.remove = function (name) {
 		document.cookie = name + '=; Max-Age=-1; path=/';
 	};
+
+	this.clear = function () {
+		document.cookie.split(';').forEach(function (c) {
+			document.cookie = c.trim().split('=')[0] + '=;' + 'expires=Thu, 01 Jan 1970 00:00:00 UTC;';
+		});
+	};
+};
+
+var Storage = exports.Storage = function Storage() {
+	var localStorage = window.localStorage;
+	this.set = function (name, value) {
+		localStorage.setItem(name, value);
+		return this.get(name);
+	};
+	this.get = function (name) {
+		return localStorage.getItem(name) || null;
+	};
+	this.remove = function (name) {
+		localStorage.removeItem(name);
+		return true;
+	};
+	this.clear = function () {
+		localStorage.clear();
+		return true;
+	};
 };
 
 var Url = exports.Url = function Url() {
@@ -238,10 +263,6 @@ var Random = exports.Random = function Random() {
 
 var Date = exports.Date = function Date() {
 	var Date = window.Date;
-	this.formateDate = function (val) {
-		var d = new Date(val);
-		return (d.getDate() < 10 ? '0' + d.getDate() : d.getDate()) + '-' + (d.getMonth() + 1 < 10 ? '0' + (d.getMonth() + 1) : d.getMonth() + 1) + '-' + (d.getYear() + 1900) + ' ' + (d.getHours() < 10 ? '0' + d.getHours() : d.getHours()) + ':' + (d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes());
-	};
 };
 
 /***/ })
