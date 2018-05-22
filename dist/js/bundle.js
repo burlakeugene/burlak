@@ -77,14 +77,48 @@ module.exports = __webpack_require__(1);
 "use strict";
 
 
-var _burlak = __webpack_require__(2);
+var _index = __webpack_require__(2);
 
-var Burlak = _interopRequireWildcard(_burlak);
+var Burlak = _interopRequireWildcard(_index);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 /***/ }),
 /* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Date = exports.Random = exports.Url = exports.Storage = exports.Cookie = exports.Dom = exports.Request = undefined;
+
+var _Request = __webpack_require__(3);
+
+var _Dom = __webpack_require__(4);
+
+var _Cookie = __webpack_require__(5);
+
+var _Storage = __webpack_require__(6);
+
+var _Url = __webpack_require__(7);
+
+var _Random = __webpack_require__(8);
+
+var _Date = __webpack_require__(9);
+
+var Request = exports.Request = _Request.Request;
+var Dom = exports.Dom = _Dom.Dom;
+var Cookie = exports.Cookie = _Cookie.Cookie;
+var Storage = exports.Storage = _Storage.Storage;
+var Url = exports.Url = _Url.Url;
+var Random = exports.Random = _Random.Random;
+var Date = exports.Date = _Date.Date;
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -100,7 +134,9 @@ var makeRequest = function makeRequest(method, request) {
 	// url: string
 	// data: object
 	// headers: object
+
 	return new Promise(function (resolve, reject) {
+		if (!request) reject('Empty request');
 		request.start && request.start();
 		var xhr = new XMLHttpRequest(),
 		    url = request.url ? request.url : '',
@@ -144,7 +180,17 @@ var Request = exports.Request = function Request() {
 	};
 };
 
-var DOM = exports.DOM = function DOM() {
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+var Dom = exports.Dom = function Dom() {
 	this.createElem = function (tag, props, html, children) {
 		var element = document.createElement(tag);
 		for (var prop in props) {
@@ -165,6 +211,16 @@ var DOM = exports.DOM = function DOM() {
 	};
 };
 
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
 var Cookie = exports.Cookie = function Cookie() {
 	this.set = function (name, value, days) {
 		var expires = '';
@@ -199,6 +255,16 @@ var Cookie = exports.Cookie = function Cookie() {
 	};
 };
 
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
 var Storage = exports.Storage = function Storage() {
 	var localStorage = window.localStorage;
 	this.set = function (name, value) {
@@ -218,6 +284,16 @@ var Storage = exports.Storage = function Storage() {
 	};
 };
 
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
 var Url = exports.Url = function Url() {
 	this.getParametr = function (name) {
 		if (name = new RegExp('[?&]' + encodeURIComponent(name) + '=([^&]*)').exec(location.search)) {
@@ -227,6 +303,16 @@ var Url = exports.Url = function Url() {
 	};
 };
 
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
 var Random = exports.Random = function Random() {
 	this.defaultSystem = 10;
 	this.defaultLength = 13;
@@ -261,6 +347,16 @@ var Random = exports.Random = function Random() {
 	};
 };
 
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
 var Date = exports.Date = function Date() {
 	var Date = window.Date;
 };

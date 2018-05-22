@@ -1,1 +1,1 @@
-import * as Burlak from './js/burlak';
+import * as Burlak from './index.js';
