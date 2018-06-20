@@ -13,7 +13,20 @@ const makeRequest = function(method, request){
 			url = request.url ? request.url : '',
 			async = request.async ? request.async : true,
 			requestData = request.data,
-			clearData = request.clearData ? true : false;
+			clearData = request.clearData ? true : false,
+			getCount = 0;
+			
+		if(method === 'GET'){
+			for(let data in requestData){
+				if(!getCount){
+					url += '?'+data+'='+requestData[data];
+				}
+				else{
+					url += '&'+data+'='+requestData[data];
+				}
+				getCount++;
+			}
+		}
 
 		xhr.open(method, url, async);
 		if(request.headers){

@@ -93,7 +93,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Hash = exports.Date = exports.Random = exports.Url = exports.Storage = exports.Cookie = exports.Dom = exports.Request = undefined;
+exports.InView = exports.Hash = exports.Date = exports.Random = exports.Url = exports.Storage = exports.Cookie = exports.Dom = exports.Request = undefined;
 
 var _Request = __webpack_require__(3);
 
@@ -111,6 +111,8 @@ var _Date = __webpack_require__(9);
 
 var _Hash = __webpack_require__(10);
 
+var _InView = __webpack_require__(11);
+
 var Request = exports.Request = _Request.Request;
 var Dom = exports.Dom = _Dom.Dom;
 var Cookie = exports.Cookie = _Cookie.Cookie;
@@ -119,6 +121,7 @@ var Url = exports.Url = _Url.Url;
 var Random = exports.Random = _Random.Random;
 var Date = exports.Date = _Date.Date;
 var Hash = exports.Hash = _Hash.Hash;
+var InView = exports.InView = _InView.InView;
 
 /***/ }),
 /* 3 */
@@ -145,7 +148,19 @@ var makeRequest = function makeRequest(method, request) {
 		    url = request.url ? request.url : '',
 		    async = request.async ? request.async : true,
 		    requestData = request.data,
-		    clearData = request.clearData ? true : false;
+		    clearData = request.clearData ? true : false,
+		    getCount = 0;
+
+		if (method === 'GET') {
+			for (var data in requestData) {
+				if (!getCount) {
+					url += '?' + data + '=' + requestData[data];
+				} else {
+					url += '&' + data + '=' + requestData[data];
+				}
+				getCount++;
+			}
+		}
 
 		xhr.open(method, url, async);
 		if (request.headers) {
@@ -523,6 +538,66 @@ var Hash = exports.Hash = function Hash() {
 		s = Utf8Encode(s);
 		return binb2hex(core_sha256(str2binb(s), s.length * chrsz));
 	};
+};
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+var InView = exports.InView = function InView(selector, options) {
+    this.items = document.querySelectorAll(selector);
+    this.in = options.in ? options.in : false;
+    this.out = options.out ? options.out : false;
+    this.scrollTop = 0;
+    this.offset = options.offset ? options.offset : 0;
+
+    this.setScrollTop = function (top) {
+        this.scrollTop = top;
+    };
+
+    this.checkItem = function (e) {
+        var elem = e.getBoundingClientRect(),
+            offset = this.offset,
+            windowHeight = window.innerHeight;
+        if (elem.top + offset + windowHeight <= windowHeight * 2 && elem.top - offset + elem.height >= 0) {
+            return true;
+        }
+        return false;
+    };
+
+    this.checkItems = function () {
+        var _this = this;
+
+        if (!this.items) return false;
+        this.items.forEach(function (e, i) {
+            var boolCheck = _this.checkItem(e);
+            if (boolCheck && _this.in) _this.in(e);
+            if (!boolCheck && _this.out) _this.out(e);
+        });
+    };
+
+    this.watch = function () {
+        var _this2 = this;
+
+        this.setScrollTop(window.pageYOffset);
+        this.checkItems();
+        window.addEventListener('scroll', function () {
+            _this2.setScrollTop(window.pageYOffset);
+            _this2.checkItems();
+        });
+        window.addEventListener('resize', function () {
+            _this2.setScrollTop(window.pageYOffset);
+            _this2.checkItems();
+        });
+    };
+
+    this.watch();
 };
 
 /***/ })

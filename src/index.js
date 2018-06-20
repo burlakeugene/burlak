@@ -6,6 +6,7 @@ import { Url as moduleUrl } from './modules/Url';
 import { Random as moduleRandom } from './modules/Random';
 import { Date as moduleDate } from './modules/Date';
 import { Hash as moduleHash } from './modules/Hash';
+import { InView as moduleInView } from './modules/InView';
 
 export const Request = moduleRequest;
 export const Dom = moduleDom;
@@ -15,3 +16,4 @@ export const Url = moduleUrl;
 export const Random = moduleRandom;
 export const Date = moduleDate;
 export const Hash = moduleHash;
+export const InView = moduleInView;
