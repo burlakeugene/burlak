@@ -83,6 +83,10 @@ var Burlak = _interopRequireWildcard(_index);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
+var a = new Burlak.Map();
+
+console.log(a.getDistance([44.960372, 34.089421], [44.960725, 34.088961]));
+
 /***/ }),
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -93,7 +97,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.InView = exports.Hash = exports.Date = exports.Random = exports.Url = exports.Storage = exports.Cookie = exports.Dom = exports.Request = undefined;
+exports.Map = exports.InView = exports.Hash = exports.Date = exports.Random = exports.Url = exports.Storage = exports.Cookie = exports.Dom = exports.Request = undefined;
 
 var _Request = __webpack_require__(3);
 
@@ -113,6 +117,8 @@ var _Hash = __webpack_require__(10);
 
 var _InView = __webpack_require__(11);
 
+var _Map = __webpack_require__(12);
+
 var Request = exports.Request = _Request.Request;
 var Dom = exports.Dom = _Dom.Dom;
 var Cookie = exports.Cookie = _Cookie.Cookie;
@@ -122,6 +128,7 @@ var Random = exports.Random = _Random.Random;
 var Date = exports.Date = _Date.Date;
 var Hash = exports.Hash = _Hash.Hash;
 var InView = exports.InView = _InView.InView;
+var Map = exports.Map = _Map.Map;
 
 /***/ }),
 /* 3 */
@@ -598,6 +605,30 @@ var InView = exports.InView = function InView(selector, options) {
     };
 
     this.watch();
+};
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+var Map = exports.Map = function Map() {
+
+    this.getDistance = function (coordOne, coordTwo) {
+        if (!coordOne && !coordTwo) return 0;
+        var EarthRadius = 6371,
+            dLat = (coordTwo[0] - coordOne[0]) * Math.PI / 180,
+            dLon = (coordTwo[1] - coordOne[1]) * Math.PI / 180,
+            a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(coordOne[0] * Math.PI / 180) * Math.cos(coordTwo[0] * Math.PI / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2),
+            c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return Math.round(EarthRadius * c * 1000);
+    };
 };
 
 /***/ })

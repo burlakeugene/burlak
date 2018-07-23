@@ -7,6 +7,7 @@ import { Random as moduleRandom } from './modules/Random';
 import { Date as moduleDate } from './modules/Date';
 import { Hash as moduleHash } from './modules/Hash';
 import { InView as moduleInView } from './modules/InView';
+import {Map as moduleMap} from './modules/Map';
 
 export const Request = moduleRequest;
 export const Dom = moduleDom;
@@ -17,3 +18,4 @@ export const Random = moduleRandom;
 export const Date = moduleDate;
 export const Hash = moduleHash;
 export const InView = moduleInView;
+export const Map = moduleMap;
