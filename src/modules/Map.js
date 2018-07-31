@@ -1,7 +1,7 @@
 export const Map = function(){
     
 	this.getDistance = function(coordOne, coordTwo){
-        if(!coordOne && !coordTwo) return 0;
+        if(!coordOne || !coordTwo) return 0;
         let EarthRadius = 6371,
             dLat = ((coordTwo[0] - coordOne[0]) * Math.PI / 180),
             dLon = ((coordTwo[1] - coordOne[1]) * Math.PI / 180),

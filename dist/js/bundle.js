@@ -83,9 +83,8 @@ var Burlak = _interopRequireWildcard(_index);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-var a = new Burlak.Map();
-
-console.log(a.getDistance([44.960372, 34.089421], [44.960725, 34.088961]));
+var a = new Burlak.DateTime();
+console.log(a.timeAgo(1211010606767));
 
 /***/ }),
 /* 2 */
@@ -97,7 +96,7 @@ console.log(a.getDistance([44.960372, 34.089421], [44.960725, 34.088961]));
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Map = exports.InView = exports.Hash = exports.Date = exports.Random = exports.Url = exports.Storage = exports.Cookie = exports.Dom = exports.Request = undefined;
+exports.Map = exports.InView = exports.Hash = exports.DateTime = exports.Random = exports.Url = exports.Storage = exports.Cookie = exports.Dom = exports.Request = undefined;
 
 var _Request = __webpack_require__(3);
 
@@ -111,7 +110,7 @@ var _Url = __webpack_require__(7);
 
 var _Random = __webpack_require__(8);
 
-var _Date = __webpack_require__(9);
+var _DateTime = __webpack_require__(13);
 
 var _Hash = __webpack_require__(10);
 
@@ -125,7 +124,7 @@ var Cookie = exports.Cookie = _Cookie.Cookie;
 var Storage = exports.Storage = _Storage.Storage;
 var Url = exports.Url = _Url.Url;
 var Random = exports.Random = _Random.Random;
-var Date = exports.Date = _Date.Date;
+var DateTime = exports.DateTime = _DateTime.DateTime;
 var Hash = exports.Hash = _Hash.Hash;
 var InView = exports.InView = _InView.InView;
 var Map = exports.Map = _Map.Map;
@@ -395,20 +394,7 @@ var Random = exports.Random = function Random() {
 };
 
 /***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-var Date = exports.Date = function Date() {
-	var Date = window.Date;
-};
-
-/***/ }),
+/* 9 */,
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -620,7 +606,7 @@ Object.defineProperty(exports, "__esModule", {
 var Map = exports.Map = function Map() {
 
     this.getDistance = function (coordOne, coordTwo) {
-        if (!coordOne && !coordTwo) return 0;
+        if (!coordOne || !coordTwo) return 0;
         var EarthRadius = 6371,
             dLat = (coordTwo[0] - coordOne[0]) * Math.PI / 180,
             dLon = (coordTwo[1] - coordOne[1]) * Math.PI / 180,
@@ -629,6 +615,55 @@ var Map = exports.Map = function Map() {
 
         return Math.round(EarthRadius * c * 1000);
     };
+};
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+var DateTime = exports.DateTime = function DateTime() {
+
+	this.timeAgo = function (previous) {
+		var labels = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+		var postfix = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
+
+		labels['sec'] = labels && labels['sec'] ? labels['sec'] : 'sec.';
+		labels['min'] = labels && labels['min'] ? labels['min'] : 'min.';
+		labels['h'] = labels && labels['h'] ? labels['h'] : 'h.';
+		labels['d'] = labels && labels['d'] ? labels['d'] : 'd.';
+		labels['m'] = labels && labels['m'] ? labels['m'] : 'm.';
+		labels['y'] = labels && labels['y'] ? labels['y'] : 'y.';
+		if (!previous) return null;
+		var current = +new Date(),
+		    msPerMinute = 60 * 1000,
+		    msPerHour = msPerMinute * 60,
+		    msPerDay = msPerHour * 24,
+		    msPerMonth = msPerDay * 30,
+		    msPerYear = msPerDay * 365,
+		    elapsed = current - previous,
+		    result = '';
+		console.log(new Date());
+		if (elapsed < msPerMinute) {
+			result = Math.round(elapsed / 1000) + ' ' + labels['sec'] + ' ' + postfix;
+		} else if (elapsed < msPerHour) {
+			result = Math.round(elapsed / msPerMinute) + ' ' + labels['min'] + ' ' + Math.round(elapsed % msPerMinute / 1000) + ' ' + labels['sec'] + ' ' + postfix;
+		} else if (elapsed < msPerDay) {
+			result = Math.round(elapsed / msPerHour) + ' ' + labels['h'] + ' ' + Math.round(elapsed % msPerHour / msPerMinute) + ' ' + labels['min'] + ' ' + postfix;
+		} else if (elapsed < msPerMonth) {
+			result = Math.round(elapsed / msPerDay) + ' ' + labels['d'] + ' ' + Math.round(elapsed % msPerDay / msPerHour) + ' ' + labels['h'] + ' ' + postfix;
+		} else if (elapsed < msPerYear) {
+			result = Math.round(elapsed / msPerMonth) + ' ' + labels['m'] + ' ' + Math.round(elapsed % msPerMonth / msPerDay) + ' ' + labels['d'] + ' ' + postfix;
+		} else {
+			result = Math.round(elapsed / msPerYear) + ' ' + labels['y'] + ' ' + Math.round(elapsed % msPerYear / msPerMonth) + ' ' + labels['m'] + ' ' + postfix;
+		}
+		return result;
+	};
 };
 
 /***/ })
