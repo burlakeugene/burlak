@@ -79,8 +79,8 @@ module.exports = __webpack_require__(1);
 
 var _index = __webpack_require__(2);
 
-var a = new _index.Money();
-console.log(a.format('21321321321.321321'));
+var a = new _index.Url();
+a.setParam('company', 'comp-name');
 
 /***/ }),
 /* 2 */
@@ -339,12 +339,68 @@ var Storage = exports.Storage = function Storage() {
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 var Url = exports.Url = function Url() {
-	this.getParametr = function (name) {
+	var _this = this;
+
+	this.getParams = function () {
+		var query = window.location.search;
+		if (!query) {
+			return {};
+		}
+
+		return (/^[?#]/.test(query) ? query.slice(1) : query).split('&').reduce(function (params, param) {
+			var _param$split = param.split('='),
+			    _param$split2 = _slicedToArray(_param$split, 2),
+			    key = _param$split2[0],
+			    value = _param$split2[1];
+
+			params[key] = value ? decodeURIComponent(value.replace(/\+/g, ' ')) : '';
+			return params;
+		}, {});
+	};
+
+	this.getParam = function (name) {
+		return _this.getParams()[name] || null;
+	};
+
+	this.getParamSingle = function (name) {
 		if (name = new RegExp('[?&]' + encodeURIComponent(name) + '=([^&]*)').exec(location.search)) {
 			return decodeURIComponent(name[1]);
 		}
 		return null;
+	};
+
+	this.updateQueryString = function (name, value) {
+		var url = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
+		if (!url) url = window.location.href;
+		var re = new RegExp("([?&])" + name + "=.*?(&|#|$)(.*)", "gi"),
+		    hash;
+
+		if (re.test(url)) {
+			if (typeof value !== 'undefined' && value !== null) return url.replace(re, '$1' + name + "=" + value + '$2$3');else {
+				hash = url.split('#');
+				url = hash[0].replace(re, '$1$3').replace(/(&|\?)$/, '');
+				if (typeof hash[1] !== 'undefined' && hash[1] !== null) url += '#' + hash[1];
+				return url;
+			}
+		} else {
+			if (typeof value !== 'undefined' && value !== null) {
+				var separator = url.indexOf('?') !== -1 ? '&' : '?';
+				hash = url.split('#');
+				url = hash[0] + separator + name + '=' + value;
+				if (typeof hash[1] !== 'undefined' && hash[1] !== null) url += '#' + hash[1];
+				return url;
+			} else return url;
+		}
+	};
+
+	this.setParam = function (name, value) {
+		var url = _this.updateQueryString(name, value);
+		window.history.pushState({ path: url }, '', url);
 	};
 };
 

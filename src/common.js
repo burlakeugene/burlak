@@ -1,4 +1,4 @@
-import {Money} from './index.js';
+import {Money, Url} from './index.js';
 
-const a = new Money();
-console.log(a.format('21321321321.321321'));
+const a = new Url;
+a.setParam('company', 'comp-name');
