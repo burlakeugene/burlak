@@ -9,6 +9,7 @@ import { Hash as moduleHash } from './modules/Hash';
 import { InView as moduleInView } from './modules/InView';
 import { Map as moduleMap } from './modules/Map';
 import { Money as moduleMoney } from './modules/Money';
+import { AjaxNavigation as moduleAjaxNavigation } from './modules/AjaxNavigation';
 
 export const Request = moduleRequest;
 export const Dom = moduleDom;
@@ -21,3 +22,4 @@ export const Hash = moduleHash;
 export const InView = moduleInView;
 export const Map = moduleMap;
 export const Money = moduleMoney;
+export const AjaxNavigation = moduleAjaxNavigation;

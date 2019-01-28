@@ -1,4 +1,14 @@
-import {Money, Url} from './index.js';
+import {AjaxNavigation} from './index.js';
 
-const a = new Url;
-a.setParam('company', 'comp-name');
+var router = new AjaxNavigation({
+    container: '#app',
+    navItems: '.ajax, .ajax a',
+    preloader: true,
+    beforeInit: function(){},
+    beforeRendered: function(){
+    },
+    afterRendered: function(appContainer){
+        window.scrollTo(0, 0);
+    },
+    afterInit: function(){}
+});
