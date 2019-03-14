@@ -79,17 +79,7 @@ module.exports = __webpack_require__(1);
 
 var _index = __webpack_require__(2);
 
-var router = new _index.AjaxNavigation({
-    container: '#app',
-    navItems: '.ajax, .ajax a',
-    preloader: true,
-    beforeInit: function beforeInit() {},
-    beforeRendered: function beforeRendered() {},
-    afterRendered: function afterRendered(appContainer) {
-        window.scrollTo(0, 0);
-    },
-    afterInit: function afterInit() {}
-});
+console.log(_index.Detection);
 
 /***/ }),
 /* 2 */
@@ -101,7 +91,7 @@ var router = new _index.AjaxNavigation({
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.AjaxNavigation = exports.Money = exports.Map = exports.InView = exports.Hash = exports.DateTime = exports.Random = exports.Url = exports.Storage = exports.Cookie = exports.Dom = exports.Request = undefined;
+exports.Detection = exports.AjaxNavigation = exports.Money = exports.Map = exports.InView = exports.Hash = exports.DateTime = exports.Random = exports.Url = exports.Storage = exports.Cookie = exports.Dom = exports.Request = undefined;
 
 var _Request = __webpack_require__(3);
 
@@ -127,6 +117,8 @@ var _Money = __webpack_require__(13);
 
 var _AjaxNavigation = __webpack_require__(14);
 
+var _Detection = __webpack_require__(15);
+
 var Request = exports.Request = _Request.Request;
 var Dom = exports.Dom = _Dom.Dom;
 var Cookie = exports.Cookie = _Cookie.Cookie;
@@ -139,6 +131,7 @@ var InView = exports.InView = _InView.InView;
 var Map = exports.Map = _Map.Map;
 var Money = exports.Money = _Money.Money;
 var AjaxNavigation = exports.AjaxNavigation = _AjaxNavigation.AjaxNavigation;
+var Detection = exports.Detection = _Detection.Detection;
 
 /***/ }),
 /* 3 */
@@ -924,6 +917,23 @@ var AjaxNavigation = exports.AjaxNavigation = function AjaxNavigation(options) {
     };
 
     return this.init();
+};
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+var Detection = exports.Detection = function Detection() {
+    this.isMobile = function () {
+        return (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+        );
+    };
 };
 
 /***/ })
