@@ -10,6 +10,7 @@ import { InView as moduleInView } from './modules/InView';
 import { Map as moduleMap } from './modules/Map';
 import { Money as moduleMoney } from './modules/Money';
 import { AjaxNavigation as moduleAjaxNavigation } from './modules/AjaxNavigation';
+import { Detection as moduleDetection } from './modules/Detection';
 
 export const Request = moduleRequest;
 export const Dom = moduleDom;
@@ -23,3 +24,4 @@ export const InView = moduleInView;
 export const Map = moduleMap;
 export const Money = moduleMoney;
 export const AjaxNavigation = moduleAjaxNavigation;
+export const Detection = moduleDetection;

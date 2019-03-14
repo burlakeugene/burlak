@@ -4,7 +4,7 @@ export const InView = function(selector, options){
     this.out = options.out ? options.out : false;
     this.scrollTop = 0;
     this.offset = options.offset ? options.offset : 0;
-    
+
     this.setScrollTop = function(top){
         this.scrollTop = top;
     };
@@ -24,8 +24,8 @@ export const InView = function(selector, options){
         if(!this.items) return false;
         this.items.forEach((e, i) => {
             let boolCheck = this.checkItem(e);
-            if(boolCheck && this.in) this.in(e);           
-            if(!boolCheck && this.out) this.out(e); 
+            if(boolCheck && this.in) this.in(e);
+            if(!boolCheck && this.out) this.out(e);
         })
     };
 

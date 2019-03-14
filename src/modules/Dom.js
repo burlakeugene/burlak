@@ -4,7 +4,7 @@ export const Dom = function(){
 		for(let prop in props){
 			element.setAttribute(prop,props[prop]);
 		}
-		if(html) element.innerHTML = html;		
+		if(html) element.innerHTML = html;
 		if(children){
 			if(children instanceof Element){
 				element.appendChild(children);
@@ -42,5 +42,4 @@ export const Dom = function(){
 		return result;
 	}
 
-	
 };
