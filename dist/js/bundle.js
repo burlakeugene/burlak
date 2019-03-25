@@ -79,7 +79,8 @@ module.exports = __webpack_require__(1);
 
 var _index = __webpack_require__(2);
 
-console.log(_index.Detection);
+var rand = new _index.Random();
+console.log(rand.between(45, 45));
 
 /***/ }),
 /* 2 */
@@ -150,7 +151,6 @@ var makeRequest = function makeRequest(method, request) {
 	// url: string
 	// data: object
 	// headers: object
-
 	return new Promise(function (resolve, reject) {
 		if (!request) reject('Empty request');
 		request.start && request.start();
@@ -160,7 +160,6 @@ var makeRequest = function makeRequest(method, request) {
 		    requestData = request.data,
 		    clearData = request.clearData ? true : false,
 		    getCount = 0;
-
 		if (method === 'GET') {
 			for (var data in requestData) {
 				if (!getCount) {
@@ -450,6 +449,22 @@ var Random = exports.Random = function Random() {
 			if (i == count - 1) result = result.substring(0, result.length - 1);
 		}
 		return result;
+	};
+
+	this.between = function () {
+		var min = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+		var max = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 100;
+
+		min = parseInt(min);
+		max = parseInt(max);
+		if (!isNaN(min) && !isNaN(max)) {
+			if (min > max) {
+				return Math.floor(Math.random() * (min - max + 1) + max);
+			} else {
+				return Math.floor(Math.random() * (max - min + 1) + min);
+			}
+		}
+		return false;
 	};
 };
 
@@ -929,12 +944,28 @@ var AjaxNavigation = exports.AjaxNavigation = function AjaxNavigation(options) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-var Detection = exports.Detection = function Detection() {
-    this.isMobile = function () {
-        return (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
-        );
-    };
-};
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Detection = exports.Detection = function () {
+    function Detection() {
+        _classCallCheck(this, Detection);
+    }
+
+    _createClass(Detection, [{
+        key: "isMobile",
+        value: function isMobile() {
+            return (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+            );
+        }
+    }]);
+
+    return Detection;
+}();
+
+;
 
 /***/ })
 /******/ ]);

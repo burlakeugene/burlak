@@ -5,7 +5,6 @@ const makeRequest = function(method, request){
 	// url: string
 	// data: object
 	// headers: object
-    
 	return new Promise(function(resolve, reject){
         if(!request) reject('Empty request');
 		request.start && request.start();
@@ -15,7 +14,6 @@ const makeRequest = function(method, request){
 			requestData = request.data,
 			clearData = request.clearData ? true : false,
 			getCount = 0;
-			
 		if(method === 'GET'){
 			for(let data in requestData){
 				if(!getCount){
@@ -36,7 +34,7 @@ const makeRequest = function(method, request){
 		}
 		xhr.send(JSON.stringify(requestData));
 		xhr.onreadystatechange = function() {
-			if (xhr.readyState != 4) return;			
+			if (xhr.readyState != 4) return;
 			if (xhr.status < 200 || xhr.status > 300) {
 				request.end && request.end();
 				reject(xhr);
@@ -44,7 +42,7 @@ const makeRequest = function(method, request){
 			else{
 				request.end && request.end();
 				let response = clearData ? JSON.parse(xhr.response) : xhr;
-				resolve(response);				
+				resolve(response);
 			}
 		}
 	});

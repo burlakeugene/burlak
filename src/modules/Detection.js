@@ -1,5 +1,5 @@
-export const Detection = function(){
-    this.isMobile = () => {
+export class Detection{
+    isMobile(){
         return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     }
 };

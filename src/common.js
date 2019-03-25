@@ -1,2 +1,4 @@
-import {Detection} from './index.js';
-console.log(Detection);
+import {Random} from './index.js';
+
+var rand = new Random;
+console.log(rand.between(45, 45));
