@@ -1,4 +1,4 @@
-import { Request as moduleRequest} from './modules/Request';
+import { Request as moduleRequest } from './modules/Request';
 import { Dom as moduleDom } from './modules/Dom';
 import { Cookie as moduleCookie } from './modules/Cookie';
 import { Storage as moduleStorage } from './modules/Storage';

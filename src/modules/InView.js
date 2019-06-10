@@ -1,7 +1,8 @@
 export const InView = function(selector, options){
-    this.items = document.querySelectorAll(selector);
+    // this.items = document.querySelectorAll(selector);
     this.in = options.in ? options.in : false;
     this.out = options.out ? options.out : false;
+    this.activeList = options.activeList ? options.activeList : false;
     this.scrollTop = 0;
     this.offset = options.offset ? options.offset : 0;
 
@@ -21,12 +22,18 @@ export const InView = function(selector, options){
     };
 
     this.checkItems = function(){
+        this.items = document.querySelectorAll(selector);
         if(!this.items) return false;
+        let array = [];
         this.items.forEach((e, i) => {
             let boolCheck = this.checkItem(e);
-            if(boolCheck && this.in) this.in(e);
+            if(boolCheck && this.in){
+                this.in(e);
+                array.push(e);
+            }
             if(!boolCheck && this.out) this.out(e);
-        })
+        });
+        this.activeList && this.activeList(array);
     };
 
     this.watch = function(){

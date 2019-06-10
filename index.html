@@ -4,10 +4,25 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Burlak</title>
+	<style>
+		.spy{
+			height: 50vh;
+			transition: all 1s;
+			margin: 10px;
+		}
+		.spy:nth-child(2){
+			height: 120vh;
+		}
+		.spy.in{
+			background-color: red;
+		}
+	</style>
 </head>
 <body>
 	<div id="app">
-		<a class="ajax" href="index2.html">to 2</a>
+		<div class="spy">1</div>
+		
+		<div class="spy">2</div>
 	</div>
 </body>
 <script src="dist/js/bundle.js"></script>

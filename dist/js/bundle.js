@@ -79,8 +79,18 @@ module.exports = __webpack_require__(1);
 
 var _index = __webpack_require__(2);
 
-var rand = new _index.Random();
-console.log(rand.between(45, 45));
+var req = new _index.InView('.spy', {
+    onlyFirst: true,
+    in: function _in(item) {
+        item.classList.add('in');
+    },
+    out: function out(item) {
+        item.classList.remove('in');
+    },
+    activeList: function activeList(array) {
+        console.log(array);
+    }
+});
 
 /***/ }),
 /* 2 */
@@ -667,9 +677,10 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 var InView = exports.InView = function InView(selector, options) {
-    this.items = document.querySelectorAll(selector);
+    // this.items = document.querySelectorAll(selector);
     this.in = options.in ? options.in : false;
     this.out = options.out ? options.out : false;
+    this.activeList = options.activeList ? options.activeList : false;
     this.scrollTop = 0;
     this.offset = options.offset ? options.offset : 0;
 
@@ -690,12 +701,18 @@ var InView = exports.InView = function InView(selector, options) {
     this.checkItems = function () {
         var _this = this;
 
+        this.items = document.querySelectorAll(selector);
         if (!this.items) return false;
+        var array = [];
         this.items.forEach(function (e, i) {
             var boolCheck = _this.checkItem(e);
-            if (boolCheck && _this.in) _this.in(e);
+            if (boolCheck && _this.in) {
+                _this.in(e);
+                array.push(e);
+            }
             if (!boolCheck && _this.out) _this.out(e);
         });
+        this.activeList && this.activeList(array);
     };
 
     this.watch = function () {
