@@ -677,12 +677,13 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 var InView = exports.InView = function InView(selector, options) {
-    // this.items = document.querySelectorAll(selector);
+    this.items = document.querySelectorAll(selector);
     this.in = options.in ? options.in : false;
     this.out = options.out ? options.out : false;
     this.activeList = options.activeList ? options.activeList : false;
     this.scrollTop = 0;
     this.offset = options.offset ? options.offset : 0;
+    this.dynamicDom = options.dynamicDom ? options.dynamicDom : false;
 
     this.setScrollTop = function (top) {
         this.scrollTop = top;
@@ -701,15 +702,13 @@ var InView = exports.InView = function InView(selector, options) {
     this.checkItems = function () {
         var _this = this;
 
-        this.items = document.querySelectorAll(selector);
+        this.items = this.dynamicDom ? document.querySelectorAll(selector) : this.items;
         if (!this.items) return false;
         var array = [];
         this.items.forEach(function (e, i) {
             var boolCheck = _this.checkItem(e);
-            if (boolCheck && _this.in) {
-                _this.in(e);
-                array.push(e);
-            }
+            if (boolCheck && _this.in) _this.in(e);
+            if (boolCheck && _this.activeList) array.push(e);
             if (!boolCheck && _this.out) _this.out(e);
         });
         this.activeList && this.activeList(array);
