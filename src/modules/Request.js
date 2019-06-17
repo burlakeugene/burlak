@@ -2,6 +2,7 @@ const makeRequest = function(method, request){
 	// start: function
 	// end: function
 	// clearData: boolean
+	// responseHeaders: boolean
 	// url: string
 	// data: object
 	// headers: object
@@ -12,7 +13,8 @@ const makeRequest = function(method, request){
 			url = request.url ? request.url : '',
 			async = request.async ? request.async : true,
 			requestData = request.data,
-			clearData = request.clearData ? true : false,
+      clearData = request.clearData ? true : false,
+      responseHeaders = request.responseHeaders ? true : false,
 			getCount = 0;
 		if(method === 'GET'){
 			for(let data in requestData){
@@ -34,6 +36,17 @@ const makeRequest = function(method, request){
 		}
 		xhr.send(JSON.stringify(requestData));
 		xhr.onreadystatechange = function() {
+      if(responseHeaders && this.readyState == this.HEADERS_RECEIVED) {
+        responseHeaders = xhr.getAllResponseHeaders().trim().split(/[\r\n]+/);
+        let headersMap = {};
+        responseHeaders.forEach(function(line) {
+					let parts = line.split(': '),
+						header = parts.shift(),
+						value = parts.join(': ');
+          headersMap[header] = value;
+        });
+        responseHeaders = headersMap;
+      }
 			if (xhr.readyState != 4) return;
 			if (xhr.status < 200 || xhr.status > 300) {
 				request.end && request.end();
@@ -41,7 +54,8 @@ const makeRequest = function(method, request){
 			}
 			else{
 				request.end && request.end();
-				let response = clearData ? JSON.parse(xhr.response) : xhr;
+        let response = clearData ? JSON.parse(xhr.response) : xhr;
+        if(responseHeaders) response['headers'] = responseHeaders;
 				resolve(response);
 			}
 		}
