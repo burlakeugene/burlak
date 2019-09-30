@@ -81,11 +81,11 @@ var _index = __webpack_require__(2);
 
 var elem = document.querySelectorAll('.spy');
 var req = new _index.InView('.spy', {
+  offset: 40,
   in: function _in(item) {
     item.classList.add('in');
   },
   out: function out(item, dir) {
-    console.log(item, dir);
     item.classList.remove('in');
   },
   activeList: function activeList(array) {}
@@ -712,19 +712,23 @@ var InView = exports.InView = function InView(target, options) {
 
   this.checkItem = function (e) {
     var elem = e.getBoundingClientRect(),
-        offset = this.offset,
+        offsetTop = parseFloat(this.offset) || 0,
+        offsetBottom = parseFloat(this.offset) || 0,
         windowHeight = window.innerHeight;
-    if (elem.top + offset + windowHeight <= windowHeight * 2 && elem.top - offset + elem.height >= 0) {
+    if (this.offset && this.offset.top && parseFloat(this.offset.top)) offsetTop = parseFloat(this.offset.top);
+    if (this.offset && this.offset.bottom && parseFloat(this.offset.bottom)) offsetBottom = parseFloat(this.offset.bottom);
+    if (elem.top - offsetTop + elem.height >= 0 && elem.top + offsetBottom + windowHeight <= windowHeight * 2) {
       return {
         bool: true
       };
     } else {
-      if (elem.top + offset + windowHeight > windowHeight * 2) {
+      if (elem.top + offsetBottom + windowHeight > windowHeight * 2) {
         return {
           bool: false,
           direction: 'bottom'
         };
-      } else {
+      }
+      if (elem.top - offsetTop + elem.height < 0) {
         return {
           bool: false,
           direction: 'top'

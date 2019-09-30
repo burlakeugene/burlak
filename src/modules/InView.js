@@ -22,24 +22,27 @@ export const InView = function(target, options) {
 
   this.checkItem = function(e) {
     let elem = e.getBoundingClientRect(),
-      offset = this.offset,
+      offsetTop = parseFloat(this.offset) || 0,
+      offsetBottom = parseFloat(this.offset) || 0,
       windowHeight = window.innerHeight;
+    if(this.offset && this.offset.top && parseFloat(this.offset.top)) offsetTop = parseFloat(this.offset.top);
+    if(this.offset && this.offset.bottom && parseFloat(this.offset.bottom)) offsetBottom = parseFloat(this.offset.bottom);
     if (
-      elem.top + offset + windowHeight <= windowHeight * 2 &&
-      elem.top - offset + elem.height >= 0
+      elem.top - offsetTop + elem.height >= 0 &&
+      elem.top + offsetBottom + windowHeight <= windowHeight * 2
     ) {
       return {
         bool: true
       };
     }
     else{
-      if( elem.top + offset + windowHeight > windowHeight * 2){
+      if( elem.top + offsetBottom + windowHeight > windowHeight * 2){
         return{
           bool: false,
           direction: 'bottom'
         }
       }
-      else{
+      if(elem.top - offsetTop + elem.height < 0){
         return{
           bool: false,
           direction: 'top'
