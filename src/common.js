@@ -1,7 +1,7 @@
 import { InView } from './index.js';
 
+var elem = document.querySelectorAll('.spy');
 var req = new InView('.spy', {
-  onlyFirst: true,
   in: item => {
     item.classList.add('in');
   },

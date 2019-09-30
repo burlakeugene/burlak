@@ -1,6 +1,6 @@
 {
   "name": "burlak",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "scripts": {
     "build": "webpack",
     "dev": "webpack --watch"

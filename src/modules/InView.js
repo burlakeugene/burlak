@@ -1,5 +1,14 @@
-export const InView = function(selector, options) {
-  this.items = document.querySelectorAll(selector);
+export const InView = function(target, options) {
+  this.getItems = function(target) {
+    if (target instanceof NodeList) {
+      return target;
+    } else if (target instanceof Node) {
+      return [target];
+    } else {
+      return document.querySelectorAll(target);
+    }
+  };
+  this.items = this.getItems(target);
   this.in = options.in ? options.in : false;
   this.out = options.out ? options.out : false;
   this.activeList = options.activeList ? options.activeList : false;
@@ -25,9 +34,7 @@ export const InView = function(selector, options) {
   };
 
   this.checkItems = function() {
-    this.items = this.dynamicDom
-      ? document.querySelectorAll(selector)
-      : this.items;
+    this.items = this.dynamicDom ? this.getItems(target) : this.items;
     if (!this.items) return false;
     let array = [];
     this.items.forEach((e, i) => {
