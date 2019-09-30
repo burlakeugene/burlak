@@ -5,10 +5,10 @@ var req = new InView('.spy', {
   in: item => {
     item.classList.add('in');
   },
-  out: item => {
+  out: (item, dir) => {
+    console.log(item, dir);
     item.classList.remove('in');
   },
   activeList: array => {
-    console.log(array);
   }
 });

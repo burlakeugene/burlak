@@ -84,12 +84,11 @@ var req = new _index.InView('.spy', {
   in: function _in(item) {
     item.classList.add('in');
   },
-  out: function out(item) {
+  out: function out(item, dir) {
+    console.log(item, dir);
     item.classList.remove('in');
   },
-  activeList: function activeList(array) {
-    console.log(array);
-  }
+  activeList: function activeList(array) {}
 });
 
 /***/ }),
@@ -716,9 +715,22 @@ var InView = exports.InView = function InView(target, options) {
         offset = this.offset,
         windowHeight = window.innerHeight;
     if (elem.top + offset + windowHeight <= windowHeight * 2 && elem.top - offset + elem.height >= 0) {
-      return true;
+      return {
+        bool: true
+      };
+    } else {
+      if (elem.top + offset + windowHeight > windowHeight * 2) {
+        return {
+          bool: false,
+          direction: 'bottom'
+        };
+      } else {
+        return {
+          bool: false,
+          direction: 'top'
+        };
+      }
     }
-    return false;
   };
 
   this.checkItems = function () {
@@ -729,9 +741,9 @@ var InView = exports.InView = function InView(target, options) {
     var array = [];
     this.items.forEach(function (e, i) {
       var boolCheck = _this.checkItem(e);
-      if (boolCheck && _this.in) _this.in(e);
-      if (boolCheck && _this.activeList) array.push(e);
-      if (!boolCheck && _this.out) _this.out(e);
+      if (boolCheck.bool && _this.in) _this.in(e);
+      if (boolCheck.bool && _this.activeList) array.push(e);
+      if (!boolCheck.bool && _this.out) _this.out(e, boolCheck.direction);
     });
     this.activeList && this.activeList(array);
   };

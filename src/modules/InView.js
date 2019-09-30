@@ -28,9 +28,24 @@ export const InView = function(target, options) {
       elem.top + offset + windowHeight <= windowHeight * 2 &&
       elem.top - offset + elem.height >= 0
     ) {
-      return true;
+      return {
+        bool: true
+      };
     }
-    return false;
+    else{
+      if( elem.top + offset + windowHeight > windowHeight * 2){
+        return{
+          bool: false,
+          direction: 'bottom'
+        }
+      }
+      else{
+        return{
+          bool: false,
+          direction: 'top'
+        }
+      }
+    }
   };
 
   this.checkItems = function() {
@@ -39,9 +54,9 @@ export const InView = function(target, options) {
     let array = [];
     this.items.forEach((e, i) => {
       let boolCheck = this.checkItem(e);
-      if (boolCheck && this.in) this.in(e);
-      if (boolCheck && this.activeList) array.push(e);
-      if (!boolCheck && this.out) this.out(e);
+      if (boolCheck.bool && this.in) this.in(e);
+      if (boolCheck.bool && this.activeList) array.push(e);
+      if (!boolCheck.bool && this.out) this.out(e, boolCheck.direction);
     });
     this.activeList && this.activeList(array);
   };
