@@ -12,7 +12,7 @@ const makeRequest = function(method, request) {
     let xhr = new XMLHttpRequest(),
       url = request.url ? request.url : '',
       async = request.async ? request.async : true,
-      requestData = request.data,
+      requestData = request.data || {},
       clearData = request.clearData ? true : false,
       responseHeaders = request.responseHeaders ? true : false,
       getCount = 0;
@@ -51,8 +51,16 @@ const makeRequest = function(method, request) {
       }
       if (xhr.readyState != 4) return;
       if (xhr.status < 200 || xhr.status > 300) {
-				request.end && request.end();
-				let response = clearData ? JSON.parse(xhr.response) : xhr;
+        request.end && request.end();
+        let response = xhr;
+        if(clearData){
+          try{
+            response = JSON.parse(response.response)
+          }
+          catch(e){
+            response = response.response
+          }
+        }
         reject(response);
       } else {
         request.end && request.end();
