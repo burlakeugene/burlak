@@ -33,7 +33,7 @@ const makeRequest = function(method, request) {
         xhr.setRequestHeader(header, request.headers[header]);
       }
     }
-    xhr.send(JSON.stringify(requestData));
+    xhr.send(request.stringify ? JSON.stringify(requestData) : requestData);
     xhr.onreadystatechange = function() {
       if (responseHeaders && this.readyState == this.HEADERS_RECEIVED) {
         responseHeaders = xhr
@@ -53,12 +53,11 @@ const makeRequest = function(method, request) {
       if (xhr.status < 200 || xhr.status > 300) {
         request.end && request.end();
         let response = xhr;
-        if(clearData){
-          try{
-            response = JSON.parse(response.response)
-          }
-          catch(e){
-            response = response.response
+        if (clearData) {
+          try {
+            response = JSON.parse(response.response);
+          } catch (e) {
+            response = response.response;
           }
         }
         reject(response);

@@ -167,7 +167,7 @@ var makeRequest = function makeRequest(method, request) {
     var xhr = new XMLHttpRequest(),
         url = request.url ? request.url : '',
         async = request.async ? request.async : true,
-        requestData = request.data,
+        requestData = request.data || {},
         clearData = request.clearData ? true : false,
         responseHeaders = request.responseHeaders ? true : false,
         getCount = 0;
@@ -188,7 +188,7 @@ var makeRequest = function makeRequest(method, request) {
         xhr.setRequestHeader(header, request.headers[header]);
       }
     }
-    xhr.send(JSON.stringify(requestData));
+    xhr.send(request.stringify ? JSON.stringify(requestData) : requestData);
     xhr.onreadystatechange = function () {
       if (responseHeaders && this.readyState == this.HEADERS_RECEIVED) {
         responseHeaders = xhr.getAllResponseHeaders().trim().split(/[\r\n]+/);
@@ -204,7 +204,14 @@ var makeRequest = function makeRequest(method, request) {
       if (xhr.readyState != 4) return;
       if (xhr.status < 200 || xhr.status > 300) {
         request.end && request.end();
-        var response = clearData ? JSON.parse(xhr.response) : xhr;
+        var response = xhr;
+        if (clearData) {
+          try {
+            response = JSON.parse(response.response);
+          } catch (e) {
+            response = response.response;
+          }
+        }
         reject(response);
       } else {
         request.end && request.end();
