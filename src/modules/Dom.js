@@ -1,5 +1,5 @@
-export const Dom = function() {
-  this.createElem = function(tag, props, html, children) {
+const Dom = function () {
+  this.createElem = function (tag, props, html, children) {
     let element = document.createElement(tag);
     for (let prop in props) {
       element.setAttribute(prop, props[prop]);
@@ -10,7 +10,7 @@ export const Dom = function() {
         element.appendChild(children);
       }
       if (children instanceof Array) {
-        children.forEach(function(elem, index) {
+        children.forEach(function (elem, index) {
           elem instanceof Element && element.appendChild(elem);
         });
       }
@@ -18,7 +18,7 @@ export const Dom = function() {
     return element;
   };
 
-  this.removeElem = function(elem) {
+  this.removeElem = function (elem) {
     if (Element.prototype.remove) {
       elem.remove();
     } else {
@@ -27,14 +27,14 @@ export const Dom = function() {
     }
   };
 
-  this.getStyle = function(elem, rule) {
+  this.getStyle = function (elem, rule) {
     var result = '';
     if (document.defaultView && document.defaultView.getComputedStyle) {
       result = document.defaultView
         .getComputedStyle(elem, '')
         .getPropertyValue(rule);
     } else if (elem.currentStyle) {
-      rule = rule.replace(/\-(\w)/g, function(strMatch, p1) {
+      rule = rule.replace(/\-(\w)/g, function (strMatch, p1) {
         return p1.toUpperCase();
       });
       result = elem.currentStyle[rule];
@@ -42,3 +42,5 @@ export const Dom = function() {
     return result;
   };
 };
+
+export default Dom;

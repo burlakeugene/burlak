@@ -1,4 +1,4 @@
-export const AjaxNavigation = function(options) {
+const AjaxNavigation = function(options) {
   this.options = options;
   this.options.container = this.options.container
     ? this.options.container
@@ -181,3 +181,5 @@ export const AjaxNavigation = function(options) {
 
   return this.init();
 };
+
+export default AjaxNavigation;

@@ -1,5 +1,5 @@
-export const Money = function() {
-  this.format = function(string, deliver = ' ') {
+const Money = function () {
+  this.format = function (string, deliver = ' ') {
     if (!string) return 0;
     string = parseFloat(string);
     string = string
@@ -11,3 +11,5 @@ export const Money = function() {
     return string;
   };
 };
+
+export default Money;

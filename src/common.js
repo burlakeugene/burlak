@@ -1,5 +1,4 @@
 import { InView } from './index.js';
-
 var elem = document.querySelectorAll('.spy');
 var req = new InView('.spy', {
   offset: 40,

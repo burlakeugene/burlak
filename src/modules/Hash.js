@@ -1,5 +1,5 @@
-export const Hash = function() {
-  this.sha256 = function(s) {
+const Hash = function () {
+  this.sha256 = function (s) {
     var chrsz = 8;
     var hexcase = 0;
     function safe_add(x, y) {
@@ -212,3 +212,5 @@ export const Hash = function() {
     return binb2hex(core_sha256(str2binb(s), s.length * chrsz));
   };
 };
+
+export default Hash;

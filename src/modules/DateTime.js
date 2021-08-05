@@ -1,4 +1,4 @@
-export const DateTime = function() {
+const DateTime = function() {
   this.timeAgo = function(previous, labels = {}, postfix = '') {
     labels['sec'] = labels && labels['sec'] ? labels['sec'] : 'sec.';
     labels['min'] = labels && labels['min'] ? labels['min'] : 'min.';
@@ -77,3 +77,5 @@ export const DateTime = function() {
     return result;
   };
 };
+
+export default DateTime;

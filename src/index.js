@@ -1,27 +1,29 @@
-import { Request as moduleRequest } from './modules/Request';
-import { Dom as moduleDom } from './modules/Dom';
-import { Cookie as moduleCookie } from './modules/Cookie';
-import { Storage as moduleStorage } from './modules/Storage';
-import { Url as moduleUrl } from './modules/Url';
-import { Random as moduleRandom } from './modules/Random';
-import { DateTime as moduleDate } from './modules/DateTime';
-import { Hash as moduleHash } from './modules/Hash';
-import { InView as moduleInView } from './modules/InView';
-import { Map as moduleMap } from './modules/Map';
-import { Money as moduleMoney } from './modules/Money';
-import { AjaxNavigation as moduleAjaxNavigation } from './modules/AjaxNavigation';
-import { Detection as moduleDetection } from './modules/Detection';
+import Request from './modules/Request';
+import Dom from './modules/Dom';
+import Cookie from './modules/Cookie';
+import Storage from './modules/Storage';
+import Url from './modules/Url';
+import Random from './modules/Random';
+import DateTime from './modules/DateTime';
+import Hash from './modules/Hash';
+import InView from './modules/InView';
+import Map from './modules/Map';
+import Money from './modules/Money';
+import AjaxNavigation from './modules/AjaxNavigation';
+import Detection from './modules/Detection';
 
-export const Request = moduleRequest;
-export const Dom = moduleDom;
-export const Cookie = moduleCookie;
-export const Storage = moduleStorage;
-export const Url = moduleUrl;
-export const Random = moduleRandom;
-export const DateTime = moduleDate;
-export const Hash = moduleHash;
-export const InView = moduleInView;
-export const Map = moduleMap;
-export const Money = moduleMoney;
-export const AjaxNavigation = moduleAjaxNavigation;
-export const Detection = moduleDetection;
+export {
+  Request,
+  Dom,
+  Cookie,
+  Storage,
+  Url,
+  Random,
+  DateTime,
+  Hash,
+  InView,
+  Map,
+  Money,
+  AjaxNavigation,
+  Detection
+}

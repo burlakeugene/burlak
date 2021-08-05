@@ -1,10 +1,10 @@
-export const Random = function() {
+const Random = function () {
   this.defaultSystem = 10;
   this.defaultLength = 13;
   this.defaultUIdCount = 4;
   this.maxLength = this.defaultLength;
 
-  this.single = function(
+  this.single = function (
     system = this.defaultSystem,
     length = this.defaultLength
   ) {
@@ -15,14 +15,11 @@ export const Random = function() {
     let rand = window.Math.floor(window.Math.random() * 0x10000000000000),
       result;
     (rand = rand.toString(system).substring(1)),
-      (result = rand
-        .split('')
-        .splice(0, length)
-        .join(''));
+      (result = rand.split('').splice(0, length).join(''));
     return result;
   };
 
-  this.multy = function(
+  this.multy = function (
     count = this.defaultUIdCount,
     system = this.defaultSystem,
     length = this.defaultLength
@@ -35,7 +32,7 @@ export const Random = function() {
     return result;
   };
 
-  this.between = function(min = 0, max = 100) {
+  this.between = function (min = 0, max = 100) {
     min = parseInt(min);
     max = parseInt(max);
     if (!isNaN(min) && !isNaN(max)) {
@@ -48,3 +45,5 @@ export const Random = function() {
     return false;
   };
 };
+
+export default Random;

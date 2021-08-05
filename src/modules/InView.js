@@ -1,4 +1,4 @@
-export const InView = function(target, options) {
+const InView = function(target, options) {
   this.getItems = function(target) {
     if (target instanceof NodeList) {
       return target;
@@ -79,3 +79,5 @@ export const InView = function(target, options) {
 
   this.watch();
 };
+
+export default InView;

@@ -1,4 +1,4 @@
-export const Url = function() {
+const Url = function () {
   this.getParams = () => {
     let query = window.location.search;
     if (!query) {
@@ -16,11 +16,11 @@ export const Url = function() {
       }, {});
   };
 
-  this.getParam = name => {
+  this.getParam = (name) => {
     return this.getParams()[name] || null;
   };
 
-  this.getParamSingle = function(name) {
+  this.getParamSingle = function (name) {
     if (
       (name = new RegExp('[?&]' + encodeURIComponent(name) + '=([^&]*)').exec(
         location.search
@@ -63,3 +63,5 @@ export const Url = function() {
     window.history.pushState({ path: url }, '', url);
   };
 };
+
+export default Url;

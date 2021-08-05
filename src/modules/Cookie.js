@@ -1,5 +1,5 @@
-export const Cookie = function() {
-  this.set = function(name, value, days) {
+const Cookie = function () {
+  this.set = function (name, value, days) {
     var expires = '';
     if (days) {
       var date = new Date();
@@ -9,7 +9,7 @@ export const Cookie = function() {
     document.cookie = name + '=' + (value || '') + expires + '; path=/';
   };
 
-  this.get = function(name) {
+  this.get = function (name) {
     var stateReq = name + '=',
       cookieArr = document.cookie.split(';');
     for (var i = 0; i < cookieArr.length; i++) {
@@ -22,12 +22,12 @@ export const Cookie = function() {
     return null;
   };
 
-  this.remove = function(name) {
+  this.remove = function (name) {
     document.cookie = name + '=; Max-Age=-1; path=/';
   };
 
-  this.clear = function() {
-    document.cookie.split(';').forEach(function(c) {
+  this.clear = function () {
+    document.cookie.split(';').forEach(function (c) {
       document.cookie =
         c.trim().split('=')[0] +
         '=;' +
@@ -35,3 +35,5 @@ export const Cookie = function() {
     });
   };
 };
+
+export default Cookie;
