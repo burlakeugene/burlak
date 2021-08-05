@@ -46,9 +46,7 @@ class Request {
       if (needAuthorization) {
         headers['authorization'] = self.getAuthorization();
       }
-      console.log(headers);
       if (!headers['Content-Type']) delete headers['Content-Type'];
-      console.log(headers);
       if (!headers['Content-Type']) {
         let formData = new FormData();
         Object.keys(requestData).forEach((key) => {
