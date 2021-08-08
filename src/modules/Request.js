@@ -69,6 +69,9 @@ class Request {
       for (let header in headers) {
         xhr.setRequestHeader(header, headers[header]);
       }
+      if(headers['Content-Type'] === 'application/json'){
+        requestData = JSON.stringify(requestData);
+      }
       xhr.send(requestData);
 
       xhr.onreadystatechange = function () {
