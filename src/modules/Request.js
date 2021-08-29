@@ -54,8 +54,8 @@ class Request {
         });
         requestData = formData;
       }
-      if (method === 'GET') {
-        requestUrl += '?';
+      if (method === 'GET' && Object.keys(requestData).length) {
+        requestUrl += requestUrl.split('?')[1] ? '&' : '?';
         for (let data in requestData) {
           requestUrl += data + '=' + requestData[data] + '&';
         }
