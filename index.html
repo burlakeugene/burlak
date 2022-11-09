@@ -5,27 +5,56 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Burlak</title>
 	<style>
-		body{
-			padding: 40px 0;
+		#app{
+			display: flex;
+			gap: 40px;
 		}
-		.spy{
-			height: 400px;
-			transition: all 1s;
-			margin: 10px;
+		.list{
+			
 		}
-		.spy:nth-child(2){
-			height: 1200px;
+		.list__inner{
+			display: none;
 		}
-		.spy.in{
+		.list__inner.active{
+			display: block;
+		}
+		.list__inner div{
 			background-color: red;
+			padding: 10px;
+			margin-top: 10px;
+			height: 400px;
+		}
+		[data-animate]{
+			transition: all 0.3s;
+		}
+		[data-animate="up"]{
+			opacity: 0;
+			transform: translateY(20px);
+		}
+		[data-animate="up"][data-animated]{
+			opacity: 1;
+			transform: translateY(0px);
 		}
 	</style>
 </head>
 <body>
 	<div id="app">
-		<div class="spy">1</div>
-		<div class="spy">2</div>
-		<div class="spy">1</div>
+		<div class="list">
+			<button class="list__toggle">toggle</button>
+			<div class="list__inner active">
+				<div data-animate="up">1</div>
+				<div data-animate="up">2</div>
+				<div data-animate="up">3</div>
+			</div>
+		</div>
+		<div class="list">
+			<button class="list__toggle">toggle</button>
+			<div class="list__inner">
+				<div data-animate="up">1</div>
+				<div data-animate="up">2</div>
+				<div data-animate="up">3</div>
+			</div>
+		</div>
 	</div>
 </body>
 <script src="dist/js/bundle.js"></script>

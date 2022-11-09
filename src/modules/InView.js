@@ -1,5 +1,5 @@
-const InView = function(target, options) {
-  this.getItems = function(target) {
+const InView = function (target, options) {
+  this.getItems = function (target) {
     if (target instanceof NodeList) {
       return target;
     } else if (target instanceof Node) {
@@ -15,43 +15,49 @@ const InView = function(target, options) {
   this.scrollTop = 0;
   this.offset = options.offset ? options.offset : 0;
   this.dynamicDom = options.dynamicDom ? options.dynamicDom : false;
+  this.intervalChecking = options.intervalChecking
+    ? options.intervalChecking
+    : false;
 
-  this.setScrollTop = function(top) {
+  this.setScrollTop = function (top) {
     this.scrollTop = top;
   };
 
-  this.checkItem = function(e) {
+  this.checkItem = function (e) {
     let elem = e.getBoundingClientRect(),
       offsetTop = parseFloat(this.offset) || 0,
       offsetBottom = parseFloat(this.offset) || 0,
-      windowHeight = window.innerHeight;
-    if(this.offset && this.offset.top && parseFloat(this.offset.top)) offsetTop = parseFloat(this.offset.top);
-    if(this.offset && this.offset.bottom && parseFloat(this.offset.bottom)) offsetBottom = parseFloat(this.offset.bottom);
+      windowHeight = window.innerHeight,
+      styles = window.getComputedStyle(e);
+
+    if (this.offset && this.offset.top && parseFloat(this.offset.top))
+      offsetTop = parseFloat(this.offset.top);
+    if (this.offset && this.offset.bottom && parseFloat(this.offset.bottom))
+      offsetBottom = parseFloat(this.offset.bottom);
     if (
       elem.top - offsetTop + elem.height >= 0 &&
       elem.top + offsetBottom + windowHeight <= windowHeight * 2
     ) {
       return {
-        bool: true
+        bool: true,
       };
-    }
-    else{
-      if( elem.top + offsetBottom + windowHeight > windowHeight * 2){
-        return{
+    } else {
+      if (elem.top + offsetBottom + windowHeight > windowHeight * 2) {
+        return {
           bool: false,
-          direction: 'bottom'
-        }
+          direction: 'bottom',
+        };
       }
-      if(elem.top - offsetTop + elem.height < 0){
-        return{
+      if (elem.top - offsetTop + elem.height < 0) {
+        return {
           bool: false,
-          direction: 'top'
-        }
+          direction: 'top',
+        };
       }
     }
   };
 
-  this.checkItems = function() {
+  this.checkItems = function () {
     this.items = this.dynamicDom ? this.getItems(target) : this.items;
     if (!this.items) return false;
     let array = [];
@@ -64,9 +70,31 @@ const InView = function(target, options) {
     this.activeList && this.activeList(array);
   };
 
-  this.watch = function() {
+  this.watch = function () {
+
+    var mutationObserver = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        console.log(mutation);
+      });
+    });
+
+    mutationObserver.observe(document.documentElement, {
+      attributes: true,
+      characterData: true,
+      childList: true,
+      subtree: true,
+      attributeOldValue: true,
+      characterDataOldValue: true
+    });
+
     this.setScrollTop(window.pageYOffset);
     this.checkItems();
+    if (this.intervalChecking) {
+      setInterval(() => {
+        this.setScrollTop(window.pageYOffset);
+        this.checkItems();
+      }, this.intervalChecking);
+    }
     window.addEventListener('scroll', () => {
       this.setScrollTop(window.pageYOffset);
       this.checkItems();

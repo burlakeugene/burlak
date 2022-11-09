@@ -1,13 +1,25 @@
 import { InView } from './index.js';
-var elem = document.querySelectorAll('.spy');
-var req = new InView('.spy', {
+var buttons = document.querySelectorAll('.list__toggle');
+buttons.length &&
+  buttons.forEach((button) => {
+    button.addEventListener('click', (event) => {
+      event.target
+        .closest('.list')
+        .querySelector('.list__inner')
+        .classList.toggle('active');
+    });
+  });
+
+new InView('[data-animate]', {
   offset: 40,
-  in: item => {
-    item.classList.add('in');
+  intervalChecking: 50,
+  in: (item) => {
+    if (!item.hasAttribute('data-animated')) {
+      item.setAttribute('data-animated', '');
+    }
   },
   out: (item, dir) => {
-    item.classList.remove('in');
+    item.removeAttribute('data-animated');
   },
-  activeList: array => {
-  }
+  activeList: (array) => {},
 });
