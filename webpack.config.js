@@ -27,9 +27,11 @@ module.exports = {
   plugins,
   entry:
     buildTarget === 'package'
-      ? './src/package/index.js'
+      ? './src/package/index.ts'
       : ['./src/app/index.js'],
-
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js'],
+  },
   output: {
     path: path.join(
       ROOT_DIR,
@@ -52,6 +54,11 @@ module.exports = {
         use: {
           loader: 'babel-loader',
         },
+      },
+      {
+        test: /\.ts$/,
+        exclude: /node_modules/,
+        use: ['babel-loader', 'ts-loader'],
       },
       {
         test: /\.(s[ac]|c)ss$/i,
