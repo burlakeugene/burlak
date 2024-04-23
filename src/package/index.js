@@ -11,6 +11,7 @@ import Map from './modules/Map';
 import Money from './modules/Money';
 import AjaxNavigation from './modules/AjaxNavigation';
 import Detection from './modules/Detection';
+import Emitter from './modules/Emitter';
 
 export {
   Request,
@@ -25,5 +26,6 @@ export {
   Map,
   Money,
   AjaxNavigation,
-  Detection
+  Detection,
+  Emitter
 }

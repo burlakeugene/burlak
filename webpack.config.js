@@ -1,40 +1,81 @@
 const path = require('path');
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const webpack = require('webpack');
+
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+const isProduction = process.argv.some((arg) => arg.includes('production'));
+
+const ROOT_DIR = __dirname;
+const buildType = process.env.BUILD_TYPE || 'umd';
+const buildTarget = process.env.BUILD_TARGET || 'app';
+
+const plugins = [new CleanWebpackPlugin()];
+
+if (buildTarget == 'app') {
+  plugins.push(
+    new webpack.HotModuleReplacementPlugin(),
+    new HtmlWebpackPlugin({
+      template: './src/app/index.html',
+      title: 'burlak',
+      rootUrl: '/',
+    })
+  );
+}
 
 module.exports = {
-  entry: ['./src/common.js'],
+  plugins,
+  entry:
+    buildTarget === 'package'
+      ? './src/package/index.js'
+      : ['./src/app/index.js'],
+
   output: {
-    filename: './js/bundle.js',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.join(
+      ROOT_DIR,
+      buildTarget === 'package'
+        ? buildType === 'umd'
+          ? '/dist'
+          : '/package'
+        : '/docs'
+    ),
+    filename: 'bundle.js',
+    libraryTarget: buildType,
+    publicPath: isProduction ? './' : '/',
   },
   devtool: 'source-map',
   module: {
     rules: [
       {
         test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+        },
+      },
+      {
+        test: /\.(s[ac]|c)ss$/i,
         use: [
+          'style-loader',
+          'css-loader',
+          'sass-loader',
           {
-            loader: 'babel-loader',
+            loader: 'postcss-loader',
             options: {
-              presets: ['@babel/preset-env'],
-              plugins: [
-                require('@babel/plugin-proposal-optional-chaining'),
-                require('@babel/plugin-syntax-dynamic-import'),
-                require('@babel/plugin-proposal-object-rest-spread'),
-                [
-                  require('@babel/plugin-proposal-decorators'),
-                  { legacy: true },
-                ],
-                [
-                  require('@babel/plugin-proposal-class-properties'),
-                  { loose: true },
-                ],
-              ],
+              postcssOptions: {
+                plugins: [['autoprefixer']],
+              },
             },
           },
         ],
       },
     ],
   },
-  plugins: [new CleanWebpackPlugin()],
+  devServer: {
+    historyApiFallback: true,
+    open: true,
+    compress: true,
+    hot: true,
+    port: 8080,
+  },
 };
