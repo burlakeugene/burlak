@@ -1,27 +1,31 @@
-type TEvent = {
-  name: string;
-  callback: (data?) => void;
-};
+type TName = string;
+type TCallback = (data?) => void;
 
 class Emitter {
-  events: TEvent[] = [];
+  events: Record<TName, TCallback[]> = {};
 
-  pub = (name: string, data: any) => {
-    this.events
-      .filter((event) => event.name === name)
-      .forEach((event) => {
-        event.callback(data);
-      });
+  publish = (name: TName, ...args) => {
+    if (!this.events[name]) {
+      return;
+    }
+
+    this.events[name].forEach((callback) => callback(...args));
   };
 
-  sub = (event: TEvent) => {
-    this.events.push(event);
+  on = (name: TName, callback: TCallback) => {
+    if (!this.events[name]) {
+      this.events[name] = [];
+    }
+
+    this.events[name].push(callback);
   };
 
-  unsub = (event: TEvent) => {
-    this.events = this.events.filter(
-      (current) =>
-        current.name !== event.name && current.callback !== event.callback
+  off = (name: TName, callback: TCallback) => {
+    if (!this.events[name]) {
+      return;
+    }
+    this.events[name] = this.events[name].filter(
+      (callbackInner) => callback !== callbackInner
     );
   };
 }

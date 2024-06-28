@@ -12,6 +12,7 @@ import Money from './modules/Money';
 import AjaxNavigation from './modules/AjaxNavigation';
 import Detection from './modules/Detection';
 import Emitter from './modules/Emitter';
+import Date from './modules/Date';
 
 export {
   Request,
@@ -27,5 +28,6 @@ export {
   Money,
   AjaxNavigation,
   Detection,
-  Emitter
-}
+  Emitter,
+  Date,
+};
