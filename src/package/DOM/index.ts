@@ -5,7 +5,9 @@ export const create = (tag, props, html, children) => {
     element.setAttribute(prop, props[prop]);
   }
 
-  if (html) element.innerHTML = html;
+  if (html) {
+    element.innerHTML = html;
+  }
 
   if (children) {
     if (children instanceof Element) {
@@ -23,5 +25,6 @@ export const create = (tag, props, html, children) => {
 
 export const remove = (element) => {
   const parent = element.parentNode;
+
   parent.removeChild(element);
 };

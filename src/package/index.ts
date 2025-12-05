@@ -1,27 +1,29 @@
-import Request from './modules/Request';
-import * as DOM from './modules/DOM';
-import * as Cookie from './modules/Cookie';
-import * as Url from './modules/Url';
-import * as Random from './modules/Random';
-import InView from './modules/InView';
-import * as Map from './modules/Map';
-import * as Money from './modules/Money';
-import AjaxNavigation from './modules/AjaxNavigation';
-import * as Detection from './modules/Detection';
-import Emitter from './modules/Emitter';
-import * as Date from './modules/Date';
+import * as DOM from './DOM';
+import * as Cookie from './Cookie';
+import * as Url from './Url';
+import * as Random from './Random';
+import * as Map from './Map';
+import * as Money from './Money';
+import * as Detection from './Detection';
+import * as Date from './Date';
+import * as Chart from './Chart';
+import Emitter from './Emitter';
+import Request from './Request';
+import InView from './InView';
+import AjaxNavigation from './AjaxNavigation';
 
 export {
-  Cookie,
-  Date,
   DOM,
-  Detection,
+  Cookie,
+  Url,
+  Random,
   Map,
   Money,
-  Random,
-  Url,
+  Detection,
+  Date,
+  Chart,
+  Emitter,
   Request,
   InView,
   AjaxNavigation,
-  Emitter,
 };

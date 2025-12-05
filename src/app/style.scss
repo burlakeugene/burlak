@@ -1,12 +1,18 @@
-*{
+* {
   box-sizing: border-box;
 }
-.calendar{
+
+html,
+body {
+  margin: 0;
+}
+
+.calendar {
   display: flex;
   flex-wrap: wrap;
 }
 
-.day{
+.day {
   flex-shrink: 0;
   width: calc(100% / 7);
   padding: 10px;
@@ -14,10 +20,43 @@
   align-items: center;
   justify-content: center;
   opacity: 0.2;
-  &.current{
+  &.current {
     opacity: 1;
   }
-  &.today{
-    color:red;
+  &.today {
+    color: red;
+  }
+}
+
+.charts {
+  font-size: 0;
+  display: flex;
+  flex-wrap: wrap;
+  height: 100vh;
+}
+
+.chart {
+  width: 50%;
+  height: 50%;
+  user-select: none;
+  canvas {
+    height: 100%;
+    width: 100%;
+  }
+}
+
+@layer scroll-driven-animations {
+  @supports ((animation-timeline: scroll()) and (animation-range: 0% 100%)) {
+    @keyframes scale-up {
+      from {
+        scale: 0.85;
+        rotate: 45deg;
+      }
+    }
+    .card {
+      animation: scale-up linear both;
+      animation-timeline: view();
+      animation-range: entry 50% entry 100%;
+    }
   }
 }

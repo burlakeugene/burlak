@@ -105,4 +105,33 @@ export const getDifference = (start: Date, end = new Date()) => {
   }, {});
 };
 
-export default { getMonth, getDifference };
+export const format = (date: Date, format: string) => {
+  let result = format.replace(/{{yyyy}}/g, date.getFullYear().toString());
+
+  result = result.replace(
+    /mm/g,
+    (date.getMonth() + 1).toString().padStart(2, '0')
+  );
+
+  result = result.replace(
+    /{{dd}}/g,
+    date.getDate().toString().padStart(2, '0')
+  );
+
+  result = result.replace(
+    /{{hh}}/g,
+    date.getHours().toString().padStart(2, '0')
+  );
+
+  result = result.replace(
+    /{{ii}}/g,
+    date.getMinutes().toString().padStart(2, '0')
+  );
+
+  result = result.replace(
+    /{{ss}}/g,
+    date.getSeconds().toString().padStart(2, '0')
+  );
+
+  return result;
+};

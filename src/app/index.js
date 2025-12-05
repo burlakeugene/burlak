@@ -4,22 +4,70 @@ import * as Burlak from '../package';
 
 const data = Burlak.Date.getMonth();
 
-const calendar = document.createElement('div');
-calendar.classList.add('calendar');
+document.body.append(
+  Burlak.DOM.create(
+    'div',
+    {
+      class: 'calendar',
+    },
+    null,
+    data.map((day) =>
+      Burlak.DOM.create(
+        'div',
+        {
+          class: `day ${day.current ? 'current' : ''} ${
+            day.today ? 'today' : ''
+          }`,
+        },
+        day.day
+      )
+    )
+  )
+);
 
-data.forEach((day) => {
-  const html = document.createElement('div');
-  html.classList.add('day');
-  if (day.current) {
-    html.classList.add('current');
-  }
+window.addEventListener('load', () => {
+  let donutCharts = document.querySelectorAll('.chart-donut');
+  donutCharts.forEach((item, index) => {
+    let canvas = item.querySelector('canvas'),
+      chart = new Burlak.Chart.Donut({
+        element: canvas,
+        data: new Array(Math.round(Math.random() * 10) || 1)
+          .fill(null)
+          .map((_, index) => ({
+            value: Math.random().toFixed(2),
+            label: 'Label ' + index,
+          })),
+        settings: {
+          hover: {
+            enabled: false,
+          },
+          texts: {
+            slicePercent: {
+              enabled: false,
+            },
+          },
+        },
+      });
+  });
 
-  if (day.today) {
-    html.classList.add('today');
-  }
-
-  html.textContent = day.day;
-  calendar.appendChild(html);
+  let pieCharts = document.querySelectorAll('.chart-pie');
+  pieCharts.forEach((item, index) => {
+    let canvas = item.querySelector('canvas'),
+      chart = new Burlak.Chart.Pie({
+        element: canvas,
+        data: new Array(Math.round(Math.random() * 10) || 1)
+          .fill(null)
+          .map((_, index) => ({
+            value: Math.random().toFixed(2),
+            label: 'Label ' + index,
+          })),
+        settings: {
+          texts: {
+            slicePercent: {
+              enabled: true,
+            },
+          },
+        },
+      });
+  });
 });
-
-document.body.appendChild(calendar);
