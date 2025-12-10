@@ -2,6 +2,7 @@ export enum EType {
   UNKNOWN = 'UNKNOWN',
   PIE = 'PIE',
   DONUT = 'DONUT',
+  RADAR = 'RADAR',
 }
 
 export enum ERenderBy {

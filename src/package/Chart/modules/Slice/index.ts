@@ -9,6 +9,25 @@ import {
 import { ERenderBy, EType, TProps } from '../types';
 import settings from './settings';
 
+type TData = Array<{
+  value: number;
+  label: string;
+  color?: string;
+}>;
+
+type TPreparedData = Array<{
+  value: number;
+  label: string;
+  percent: number;
+  color: string;
+  total: number;
+  state?: number;
+  startPi?: number;
+  endPi?: number;
+  polygon?: number[];
+  hovered?: boolean;
+}>;
+
 export default class Slices extends Chart {
   constructor(props: TProps) {
     super({
@@ -17,11 +36,11 @@ export default class Slices extends Chart {
     });
   }
 
-  prepareData(data = []) {
+  prepareData(data: TData = []): TPreparedData {
     data = data.filter((item) => item.value > 0);
 
     const total = data.reduce(
-      (acc, item) => acc + (parseFloat(item.value) || 0),
+      (acc, item) => acc + (parseFloat(String(item.value)) || 0),
       0
     );
 
@@ -30,9 +49,10 @@ export default class Slices extends Chart {
       percent: (100 / total) * item.value,
       total,
       color: item.color || generateRandomColor(),
-      state: item.state || 0,
     }));
   }
+
+  getData = () => this.data as TPreparedData;
 
   generatePolygon = ({
     count = 20,
@@ -147,7 +167,7 @@ export default class Slices extends Chart {
       const startPi = piOffset;
       const endPi =
         (2 * Math.PI * state.loading * item.percent) / 100 + piOffset;
-      const hoveredValue = settings.data.hover.value * item.state;
+      const hoveredValue = settings.data.hover.value * (item.state || 0);
 
       item.startPi = startPi;
       item.endPi = endPi;
@@ -242,7 +262,7 @@ export default class Slices extends Chart {
         canvas.context.fillStyle = settings.texts.slicePercent.styles.color;
 
         let percentRadius = radius;
-        const hoveredValue = settings.data.hover.value * item.state;
+        const hoveredValue = settings.data.hover.value * (item.state || 0);
 
         if (type === EType.DONUT) {
           percentRadius += settings.data.volumed

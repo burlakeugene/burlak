@@ -13,7 +13,7 @@ export default {
     }
   },
   labels: {
-    enable: true,
+    enabled: true,
     offset: 15,
     styles: {
       fontSize: 14,
@@ -27,7 +27,7 @@ export default {
       }
     },
     dots: {
-      enable: true,
+      enabled: true,
       styles: {
         width: 3,
         hover: {

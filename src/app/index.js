@@ -70,4 +70,27 @@ window.addEventListener('load', () => {
         },
       });
   });
+
+  let radarCharts = document.querySelectorAll('.chart-radar');
+  radarCharts.forEach((item, index) => {
+    let canvas = item.querySelector('canvas'),
+      dataCount = 6,
+      data = {
+        labels: new Array(dataCount).fill().map((item, index) => {
+          return 'Label ' + index;
+        }),
+        datasets: new Array(2).fill().map((item, index) => {
+          return {
+            name: 'Dataset ' + index,
+            values: new Array(dataCount).fill().map((item, index) => {
+              return Math.ceil(Math.random() * 10);
+            }),
+          };
+        }),
+      },
+      chart = new Burlak.Chart.Radar({
+        element: canvas,
+        data,
+      });
+  });
 });
