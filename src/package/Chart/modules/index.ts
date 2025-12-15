@@ -52,6 +52,7 @@ export default class Chart {
       by: ERenderBy.SET_SETTINGS,
     });
   }
+
   getSettings() {
     return this.settings;
   }
@@ -63,6 +64,7 @@ export default class Chart {
       by: ERenderBy.SET_DATA,
     });
   }
+
   getData() {
     return this.data;
   }
@@ -226,7 +228,8 @@ export default class Chart {
             panel.width = width;
           }
 
-          text.height = settings.tooltip.styles.fontSize * lineHeightCoefficient;
+          text.height =
+            settings.tooltip.styles.fontSize * lineHeightCoefficient;
           text.x =
             settings.tooltip.styles.padding.left +
             settings.tooltip.styles.borderWidth / 2;

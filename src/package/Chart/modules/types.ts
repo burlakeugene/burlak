@@ -1,5 +1,6 @@
 export enum EType {
   UNKNOWN = 'UNKNOWN',
+  COMBO = 'COMBO',
   PIE = 'PIE',
   DONUT = 'DONUT',
   RADAR = 'RADAR',

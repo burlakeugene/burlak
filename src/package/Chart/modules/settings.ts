@@ -2,7 +2,7 @@ export default {
   animated: true,
   view: {
     styles: {
-      background: '#1a1e30',
+      background: '#202020',
     },
   },
   data: {

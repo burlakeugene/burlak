@@ -118,6 +118,10 @@ export const isFunction = (func) => {
 };
 
 export const getHex = (color) => {
+  if (!color) {
+    return null;
+  }
+
   let result = color;
 
   if (result.length === 4 && result[0] === '#') {

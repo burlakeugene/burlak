@@ -93,4 +93,59 @@ window.addEventListener('load', () => {
         data,
       });
   });
+
+  let comboCharts = document.querySelectorAll('.chart-combo');
+  comboCharts.forEach((item, index) => {
+    const canvas = item.querySelector('canvas');
+    const dataCount = 9;
+    const generateValues = () =>
+      new Array(dataCount)
+        .fill(null)
+        .map((_, index) => Math.random() * (Math.random() > 0.5 ? 1 : -1));
+    const chart = new Burlak.Chart.Combo({
+      settings: {
+        data: {
+          line: {
+            dots: {
+              enable: true,
+            },
+          },
+        },
+      },
+      element: canvas,
+      data: {
+        labels: new Array(dataCount)
+          .fill(null)
+          .map((_, index) => `Label ${index}`),
+        datasets: [
+          {
+            name: 'Bar data 1',
+            type: 'bar',
+            values: generateValues(),
+          },
+          {
+            name: 'Bar data 2',
+            type: 'bar',
+            values: generateValues(),
+          },
+          {
+            name: 'Line data 1',
+            type: 'line',
+            smooth: true,
+            values: generateValues(),
+          },
+          {
+            name: 'Line data 2',
+            type: 'line',
+            values: generateValues(),
+          },
+          {
+            name: 'Dot data',
+            type: 'dot',
+            values: generateValues(),
+          },
+        ],
+      },
+    });
+  });
 });
