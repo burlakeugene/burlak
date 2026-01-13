@@ -15,6 +15,7 @@ type TData = {
     type: 'line' | 'dot' | 'bar';
     values: number[];
     color?: string;
+    smooth?: boolean;
   }>;
 };
 
@@ -25,12 +26,28 @@ type TPreparedData = {
     xEnd?: number;
   }>;
   datasets: Array<{
+    index: number;
     name: string;
+    sameCount: number;
+    smooth?: boolean;
     type: 'line' | 'dot' | 'bar';
     values: Array<{
+      name: string;
       value: number;
       index?: number;
       state?: number;
+      first?: boolean;
+      last?: boolean;
+      hovered?: boolean;
+      color?: string;
+      x?: number;
+      y?: number;
+      area?: {
+        xStart: number;
+        yStart: number;
+        xEnd: number;
+        yEnd: number;
+      };
     }>;
     color?: string;
   }>;
@@ -343,239 +360,268 @@ export default class Combo extends Chart {
     return top + height - height * percent;
   }
 
-  getDatasets() {
-    let { data } = this;
-    return data.datasets;
-  }
   getValues(): number[] {
-    let { data } = this.settings,
-      acc = [];
-    if (data.initialValue || data.initialValue === 0)
-      acc.push(data.initialValue);
-    let datasets = this.getDatasets(),
-      result = datasets.reduce((acc, dataset) => {
-        return [...acc, ...dataset.values.map((value) => value.value)];
-      }, acc);
+    const data = this.getData();
+    const settings = this.getSettings();
+    const acc = [];
 
-    return result;
+    if (settings.data.initialValue || settings.data.initialValue === 0) {
+      acc.push(settings.data.initialValue);
+    }
+
+    return data.datasets.reduce(
+      (acc, dataset) => [...acc, ...dataset.values.map((value) => value.value)],
+      acc
+    );
   }
 
-  drawData() {
-    let { settings } = this,
-      { data } = settings,
-      { enable } = data,
-      datasets = this.getDatasets();
-    if (!enable) return;
-    let bars = datasets.filter((dataset) => {
-      return dataset.type === 'bar';
-    });
-    bars.forEach((dataset) => {
-      let { type } = dataset;
-      type = type.toUpperCase();
-      this['draw' + type] && this['draw' + type](dataset);
-    });
-    let lines = datasets.filter((dataset) => {
-      return dataset.type === 'line' || dataset.type === 'dot';
-    });
-    lines.forEach((dataset) => {
-      let { type } = dataset;
-      type = type.toUpperCase();
-      this.drawLINE(dataset);
+  datasets() {
+    const data = this.getData();
+    const settings = this.getSettings();
+
+    if (!settings.data.enabled) {
+      return;
+    }
+
+    data.datasets.forEach((dataset) => {
+      this.draw?.[dataset.type]?.(dataset);
     });
   }
+
+  draw = {
+    bar: (dataset: TPreparedData['datasets'][number]) => {
+      const canvas = this.canvas;
+      const settings = this.getSettings();
+      const barRect = this.getRect('bar');
+      const viewRect = this.getRect('view');
+      const drawStart = barRect.left;
+      const partWidth = barRect.width / dataset.values.length;
+
+      settings.data.line.offset.left = settings.data.line.offset.right =
+        partWidth / 2;
+
+      dataset.values.forEach((value, index) => {
+        value.first = !index;
+        value.last = index === dataset.values.length - 1;
+
+        canvas.context.beginPath();
+
+        const color = colorChangeTone(
+          dataset.color,
+          settings.data.bar?.hover?.enabled
+            ? settings.data.bar.hover.value * value.state
+            : 1
+        );
+
+        canvas.context.strokeStyle = color;
+        canvas.context.fillStyle = color;
+
+        const barWidth =
+          partWidth / dataset.sameCount -
+          settings.data.bar.offset / dataset.sameCount;
+        const x =
+          drawStart +
+          settings.data.bar.offset / 2 +
+          partWidth * index +
+          barWidth * dataset.index;
+
+        const xStart = x;
+        const xEnd = x + barWidth;
+        const y = this.getInterpolation(value.value, this.getValues());
+        const y0 = this.getInterpolation(0, this.getValues());
+
+        value.area = {
+          xStart: value.first ? viewRect.left : drawStart + partWidth * index,
+          yStart: barRect.top,
+          xEnd: value.last
+            ? canvas.element.clientWidth - viewRect.right
+            : drawStart +
+              partWidth * index +
+              barWidth * dataset.sameCount +
+              settings.data.bar.offset,
+          yEnd: barRect.top + barRect.height,
+        };
+
+        this.checkIsHovered(value);
+
+        canvas.context.moveTo(xStart, y0);
+        canvas.context.lineTo(xStart, y);
+        canvas.context.lineTo(xEnd, y);
+        canvas.context.lineTo(xEnd, y0);
+        canvas.context.fill();
+      });
+    },
+    line: (dataset: TPreparedData['datasets'][number]) => {
+      const canvas = this.canvas;
+      const settings = this.getSettings();
+      const drawRect = this.getRect('line');
+      const viewRect = this.getRect('view');
+      const drawStart = drawRect.left;
+      const partWidth =
+        drawRect.width /
+        (dataset.values.length === 1 ? 1 : dataset.values.length - 1);
+
+      // let { canvas, settings } = this,
+      //   { data, offset, grid } = settings,
+      //   { element, context } = canvas,
+      //   { line } = data,
+      //   { lineWidth } = line.styles,
+      //   { values, color, smooth } = dataset,
+      //   drawRect = this.getRect('line'),
+      //   viewRect = this.getRect('view'),
+      //   drawStart = drawRect.left,
+      //   partWidth =
+      //     drawRect.width / (values.length === 1 ? 1 : values.length - 1);
+      dataset.values.forEach((value, index) => {
+        let x = drawStart + partWidth * index,
+          y = this.getInterpolation(value.value, this.getValues());
+        value.x = x;
+        value.y = y;
+        value.first = !index;
+        value.last = index === dataset.values.length - 1;
+        value.area = {
+          xStart: value.first ? viewRect.left : x - partWidth / 2,
+          yStart: drawRect.top,
+          xEnd: value.last
+            ? canvas.element.clientWidth - viewRect.right
+            : x + partWidth / 2,
+          yEnd: drawRect.top + drawRect.height,
+        };
+        this.checkIsHovered(value);
+      });
+
+      if (dataset.type === 'line') {
+        canvas.context.strokeStyle = dataset.color;
+        canvas.context.lineWidth = settings.data.line.styles.lineWidth;
+        canvas.context.lineJoin = 'round';
+
+        if (dataset.smooth) {
+          canvas.context.drawLineCurve(
+            dataset.values.map((item) => ({ x: item.x, y: item.y }))
+          );
+        } else {
+          canvas.context.beginPath();
+
+          dataset.values.forEach((value, index) => {
+            if (!index) {
+              canvas.context.moveTo(value.x, value.y);
+            } else {
+              canvas.context.lineTo(value.x, value.y);
+            }
+          });
+
+          canvas.context.stroke();
+        }
+      }
+      if (dataset.type === 'dot' || settings.data.line?.dots?.enabled) {
+        canvas.context.fillStyle = dataset.color;
+        canvas.context.strokeStyle = colorChangeTone(dataset.color, -50);
+        dataset.values.forEach((value, index) => {
+          canvas.context.beginPath();
+          canvas.context.arc(
+            value.x,
+            value.y,
+            settings.data.line.dots.width +
+              (settings.data.line.dots.hover.enabled
+                ? settings.data.line.dots.hover.width * value.state
+                : 0),
+            0,
+            2 * Math.PI
+          );
+          canvas.context.fill();
+          canvas.context.closePath();
+          canvas.context.stroke();
+        });
+      }
+    },
+    dot: (dataset) => this.draw.line(dataset),
+  };
 
   getRect(type) {
-    let { canvas, settings } = this,
-      { offset, grid, data } = settings,
-      { element, context } = canvas,
-      viewRect = {
-        top: offset.top + grid.styles.borderWidth,
-        left: offset.left + grid.styles.borderWidth,
-        right: offset.right + grid.styles.borderWidth,
-        bottom: offset.bottom - grid.styles.borderWidth,
-        width:
-          element.clientWidth -
-          offset.left -
-          offset.right -
-          grid.styles.borderWidth * 2,
-        height:
-          element.clientHeight -
-          offset.top -
-          offset.bottom -
-          grid.styles.borderWidth * 2,
-      },
-      gridRect = {
-        top: viewRect.top + grid.offset.top,
-        left: viewRect.left + grid.offset.left,
-        right: viewRect.right + grid.offset.right,
-        bottom: viewRect.bottom - grid.offset.bottom,
-        width: viewRect.width - grid.offset.left - grid.offset.right,
-        height: viewRect.height - grid.offset.top - grid.offset.bottom,
-      },
-      barRect = gridRect,
-      lineRect = {
-        ...gridRect,
-        left: gridRect.left + data.line.offset.left,
-        right: gridRect.right + data.line.offset.right,
-        width: gridRect.width - data.line.offset.left - data.line.offset.right,
-      },
-      obj = {
-        view: viewRect,
-        grid: gridRect,
-        bar: barRect,
-        line: lineRect,
-      };
+    const canvas = this.canvas;
+    const settings = this.getSettings();
+    const { offset, grid, data } = settings;
+    const { element } = canvas;
+
+    const viewRect = {
+      top: offset.top + grid.styles.borderWidth,
+      left: offset.left + grid.styles.borderWidth,
+      right: offset.right + grid.styles.borderWidth,
+      bottom: offset.bottom - grid.styles.borderWidth,
+      width:
+        element.clientWidth -
+        offset.left -
+        offset.right -
+        grid.styles.borderWidth * 2,
+      height:
+        element.clientHeight -
+        offset.top -
+        offset.bottom -
+        grid.styles.borderWidth * 2,
+    };
+    const gridRect = {
+      top: viewRect.top + grid.offset.top,
+      left: viewRect.left + grid.offset.left,
+      right: viewRect.right + grid.offset.right,
+      bottom: viewRect.bottom - grid.offset.bottom,
+      width: viewRect.width - grid.offset.left - grid.offset.right,
+      height: viewRect.height - grid.offset.top - grid.offset.bottom,
+    };
+    const barRect = gridRect;
+    const lineRect = {
+      ...gridRect,
+      left: gridRect.left + data.line.offset.left,
+      right: gridRect.right + data.line.offset.right,
+      width: gridRect.width - data.line.offset.left - data.line.offset.right,
+    };
+    const obj = {
+      view: viewRect,
+      grid: gridRect,
+      bar: barRect,
+      line: lineRect,
+    };
 
     return type && obj[type] ? obj[type] : obj;
   }
-  drawLINE(dataset) {
-    let { canvas, settings } = this,
-      { data, offset, grid } = settings,
-      { element, context } = canvas,
-      { line } = data,
-      { lineWidth } = line.styles,
-      { values, color, smooth } = dataset,
-      drawRect = this.getRect('line'),
-      viewRect = this.getRect('view'),
-      drawStart = drawRect.left,
-      partWidth =
-        drawRect.width / (values.length === 1 ? 1 : values.length - 1);
-    values.forEach((value, index) => {
-      let x = drawStart + partWidth * index,
-        y = this.getInterpolation(value.value, this.getValues());
-      value.x = x;
-      value.y = y;
-      value.isFirst = !index;
-      value.isLast = index === values.length - 1;
-      value.area = {
-        xStart: value.isFirst ? viewRect.left : x - partWidth / 2,
-        yStart: drawRect.top,
-        xEnd: value.isLast
-          ? element.clientWidth - viewRect.right
-          : x + partWidth / 2,
-        yEnd: drawRect.top + drawRect.height,
-      };
-      this.checkIsHovered(value);
-    });
-    if (dataset.type === 'line') {
-      context.strokeStyle = dataset.color;
-      context.lineWidth = lineWidth;
-      context.lineJoin = 'round';
-      if (smooth) {
-        context.drawLineCurve(values);
-      } else {
-        context.beginPath();
-        values.forEach((value, index) => {
-          if (!index) {
-            context.moveTo(value.x, value.y);
-          } else {
-            context.lineTo(value.x, value.y);
-          }
-        });
-        context.stroke();
-      }
-    }
-    if (dataset.type === 'dot' || line?.dots?.enable) {
-      context.fillStyle = dataset.color;
-      context.strokeStyle = colorChangeTone(dataset.color, -50);
-      values.forEach((value, index) => {
-        context.beginPath();
-        context.arc(
-          value.x,
-          value.y,
-          line.dots.width +
-            (line.dots.hover.enable ? line.dots.hover.width * value.state : 0),
-          0,
-          2 * Math.PI
-        );
-        context.fill();
-        context.closePath();
-        context.stroke();
-      });
-    }
-  }
-  drawBAR(dataset) {
-    let { canvas, settings, cursor } = this,
-      { data } = settings,
-      { element, context } = canvas,
-      { bar } = data,
-      { values } = dataset,
-      drawRect = this.getRect('bar'),
-      viewRect = this.getRect('view'),
-      drawStart = drawRect.left,
-      partWidth = drawRect.width / values.length;
-    data.line.offset.left = partWidth / 2;
-    data.line.offset.right = partWidth / 2;
-    values.forEach((value, index) => {
-      value.isFirst = !index;
-      value.isLast = index === values.length - 1;
-      context.beginPath();
-      let color = colorChangeTone(
-        dataset.color,
-        bar?.hover?.enable ? bar.hover.value * value.state : 1
-      );
-      context.strokeStyle = color;
-      context.fillStyle = color;
-      let barWidth = partWidth / dataset.count - bar.offset / dataset.count,
-        x =
-          drawStart +
-          bar.offset / 2 +
-          partWidth * index +
-          barWidth * (dataset.index - 1),
-        xStart = x,
-        xEnd = x + barWidth,
-        y = this.getInterpolation(value.value, this.getValues()),
-        y0 = this.getInterpolation(0, this.getValues());
-      value.area = {
-        xStart: value.isFirst ? viewRect.left : drawStart + partWidth * index,
-        yStart: drawRect.top,
-        xEnd: value.isLast
-          ? element.clientWidth - viewRect.right
-          : drawStart +
-            partWidth * index +
-            barWidth * dataset.count +
-            bar.offset,
-        yEnd: drawRect.top + drawRect.height,
-      };
-      this.checkIsHovered(value);
-      context.moveTo(xStart, y0);
-      context.lineTo(xStart, y);
-      context.lineTo(xEnd, y);
-      context.lineTo(xEnd, y0);
-      context.fill();
-    });
-  }
+
   checkIsHovered(item) {
-    let { cursor } = this,
-      { area } = item,
-      bool =
-        cursor.x >= area.xStart &&
-        cursor.x < area.xEnd &&
-        cursor.y >= area.yStart &&
-        cursor.y < area.yEnd;
-    item.isHovered = bool;
+    const cursor = this.cursor;
+
+    item.hovered =
+      cursor.x >= item.area.xStart &&
+      cursor.x < item.area.xEnd &&
+      cursor.y >= item.area.yStart &&
+      cursor.y < item.area.yEnd;
+
     super.hover({
       item,
-      isHovered: bool,
+      isHovered: item.hovered,
     });
-    return bool;
+
+    return item.hovered;
   }
+
   tooltip() {
-    let { settings, data, cursor } = this,
-      hovered = data.datasets.map((dataset) => {
-        return dataset.values.filter((value) => value.isHovered);
-      });
-    hovered = hovered.reduce((acc, panel) => {
-      return [...acc, ...panel];
+    const settings = this.getSettings();
+    const data = this.getData();
+
+    const hovered = data.datasets.reduce((acc, dataset) => {
+      const items = dataset.values.filter((value) => value.hovered);
+
+      return [...acc, ...items];
     }, []);
-    if (!hovered.length) return;
-    let labels = data.labels.filter((label) => {
-        return label.xStart <= cursor.x && label.xEnd >= cursor.x;
-      }),
-      label = labels[labels.length - 1];
+
+    if (!hovered.length) {
+      return;
+    }
+
+    const index = hovered[hovered.length - 1].index;
+
+    const label = data.labels[index];
+
     super.tooltip({
       title: {
-        value: label?.text || '',
+        value: label?.value || '',
       },
       panels: hovered.map((panel) => ({
         colorPanel: {
@@ -583,7 +629,7 @@ export default class Combo extends Chart {
         },
         texts: [
           {
-            text: 'Value: ' + panel.value.toFixed(settings.data.digits),
+            value: 'Value: ' + panel.value.toFixed(settings.data.digits),
           },
         ],
         footer: {
@@ -592,6 +638,7 @@ export default class Combo extends Chart {
       })),
     });
   }
+
   render = (props: { by: ERenderBy }) => {
     let time = 300;
 
@@ -603,9 +650,9 @@ export default class Combo extends Chart {
       super.baseRender(props);
       this.grid();
       this.labels();
-      // this.data();
+      this.datasets();
       this.values();
-      // this.drawTooltip();
+      this.tooltip();
     }, time / 60);
   };
 }

@@ -45,7 +45,7 @@ export default {
     },
   },
   data: {
-    enable: true,
+    enabled: true,
     offset: 0,
     digits: 2,
     line: {
@@ -56,10 +56,10 @@ export default {
         bottom: 0,
       },
       dots: {
-        enable: true,
+        enabled: true,
         width: 5,
         hover: {
-          enable: true,
+          enabled: true,
           width: 3,
         },
       },
@@ -70,7 +70,7 @@ export default {
     bar: {
       offset: 10,
       hover: {
-        enable: true,
+        enabled: true,
         value: 50,
       },
     },
