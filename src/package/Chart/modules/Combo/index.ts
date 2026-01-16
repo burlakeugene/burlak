@@ -268,9 +268,10 @@ export default class Combo extends Chart {
       return;
     }
 
+    const lineRect = this.getRect('line');
     const viewRect = this.getRect('view');
-    const width = viewRect.width / (count - 1);
-    const start = viewRect.left;
+    const width = lineRect.width / (count - 1);
+    const start = lineRect.left;
     const y = canvas.element.clientHeight - settings.offset.bottom / 2;
 
     data.labels.forEach((label, index) => {
